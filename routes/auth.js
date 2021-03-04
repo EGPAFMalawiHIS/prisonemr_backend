@@ -1,5 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
+const jwt = require('jsonwebtoken');
 
 const authController = require('../controllers/auth');
 
@@ -26,6 +27,33 @@ router.post(
 );
 
 router.post('/login', authController.login);
-router.get('/logout', authController.logout);
+
+router.get('/userid',verifytoken,function (req, res,next){
+
+         res.status(200).json(decodedToken.userId);
+
+});
+
+var decodedToken ="";
+
+function verifytoken(req,res,next){
+
+ let token = req.query.token;
+
+ jwt.verify(token,'mySecretKey', function(error,tokendata){
+ 	 if (error){
+ 	 	            return res.status(400).json({message: "Unauthorised request"})
+ 	 }
+ 	 if (tokendata){
+ 	 	         
+ 	 	         decodedToken = tokendata;
+ 	 	         next();
+ 	 	   	 }
+ })
+
+}
+
+
+router.post('/patientregister', authController.patient);
 
 module.exports = router;

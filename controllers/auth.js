@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const Patient = require('../models/patient');
 
 const totals =0;
 
@@ -69,9 +70,10 @@ exports.login = async (req, res, next) => {
 			{
 				expiresIn: '12h',
 			}
-		);
+		);        
 
-		res.status(200).json({ token: token, userId: storedUser.id });
+
+		res.status(200).json(token);
 
        
 	} catch (err) {
@@ -82,9 +84,79 @@ exports.login = async (req, res, next) => {
 	}
 };
 
-exports.logout = async (req, res) => {
+//exports.username = async (req, res,next) => {
   
    
-    res.status(200);
+    //res.status(200);
   
+//};
+
+
+
+
+
+exports.patient = async (req, res, next) => {
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) return;
+
+	const prisonname = req.body.prisonname;
+	const fullname = req.body.fullname;
+	const gender = req.body.gender;
+	const registrationdate = req.body.registrationdate;
+	const entrydate =req.body.entrydate;
+    const dob = req.body.dob;
+    const regtype = req.body.regtype;
+    const cjnumber = req.body.cjnumber;
+    const cellnumber = req.body.cellnumber;
+    const hivstatus = req.body.hivstatus;
+    const artyes = req.body.artyes;
+    const tbyes = req.body.tbyes;
+    const stiyes =req.body.stiyes;
+    const artstartdate = req.body.artstartdate;
+    const artnumber = req.body.artnumber;
+    const regimen =req.body.regimen;
+	const nextappointment = req.body.nextappointment;
+	const currentvl= req.body.currentvl;
+	const vleligibledate=req.body.vleligibledate
+
+	try {
+		
+
+		const userDetails = {
+
+			prisonname: prisonname,
+			fullname: fullname,
+			gender: gender,
+			registrationdate: registrationdate,
+			entrydate: entrydate,
+		    dob: dob,
+		    regtype: regtype,
+		    cjnumber:cjnumber,
+		    cellnumber:cellnumber,
+		    hivstatus: hivstatus,
+		    artyes: artyes,
+		    tbyes: tbyes,
+		    stiyes: stiyes,
+		    artstartdate: artstartdate,
+		    artnumber:artnumber,
+		    regimen:regimen,
+	        nextappointment:nextappointment,
+	        currentvl:currentvl,
+	       vleligibledate:vleligibledate
+
+		};
+
+		const result = await Patient.save(userDetails);
+
+		res.status(201).json({ message: 'Patient demographics captured succesully.' });
+
+
+
+	} catch (err) {
+		if (!err.statusCode) {
+			res.statusCode = 500;
+		}
+		next(err);
+	}
 };
