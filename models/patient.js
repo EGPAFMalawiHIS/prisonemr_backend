@@ -34,7 +34,7 @@ module.exports = class patient {
 		return db.execute(` SELECT * FROM inmates WHERE cjnumber = '${cjnumber}' `);
 	}
 
-	static save(patient) {
+	/*static save(patient) {
 		return db.execute(
 
 			`INSERT INTO inmates (prisonname,fullname,gender,registration_date,entry_date,dob,reg_type,cj_number,cell_number,hiv_status,art_status,tb_status,
@@ -42,6 +42,18 @@ module.exports = class patient {
 			 VALUES ('${patient.prisonname}', '${patient.fullname}','${patient.gender}','${patient.registrationdate}','${patient.entrydate}','${patient.dob}',
 			  '${patient.regtype}','${patient.cjnumber}','${patient.cellnumber}','${patient.hivstatus}','${patient.artyes}','${patient.tbyes}',
 			  '${patient.stiyes}','${patient.artstartdate}','${patient.artnumber}','${patient.regimen}', '${patient.nextappointment}', '${patient.currentvl}','${patient.vleligibledate}')`
+		);
+	}*/
+
+
+	static save(patient) {
+		return db.execute(
+
+			`INSERT INTO demographics (prisonname,fullname,gender,reg_date,entry_date,dob_birth,reg_type,criman_justice,cell_number,hiv_status,art_status,tb_status,
+			                      sti_status)
+			 VALUES ('${patient.prisonname}', '${patient.fullname}','${patient.gender}','${patient.registrationdate}','${patient.entrydate}','${patient.dob}',
+			  '${patient.regtype}','${patient.cjnumber}','${patient.cellnumber}','${patient.hivstatus}','${patient.artyes}','${patient.tbyes}',
+			  '${patient.stiyes}')`
 		);
 	}
 };

@@ -56,4 +56,10 @@ function verifytoken(req,res,next){
 
 router.post('/patientregister', authController.patient);
 
+router.post('/tbscreen', authController.tbscreen);
+
+router.post('/artscreen', authController.artscreen);
+
+router.post('/stiscreen', authController.stiscreen);
+
 module.exports = router;
