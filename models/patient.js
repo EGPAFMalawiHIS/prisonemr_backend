@@ -1,59 +1,53 @@
 const db = require('../util/database');
+const date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+
+function uuid() {                                  
+                    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,function(){return(0|Math.random()*16)
+                    	                               .toString(16)});
+                  }
 
 module.exports = class patient {
-	constructor(prisonname,fullname,gender,registrationdate,entrydate,dob,regtype,cjnumber,cellnumber,hivstatus,
-		        artyes,artno,tbyes,tbno,stiyes,stino,artstartdate,artnumber,regimen,nextappointment,
-            currentvl,vleligibledate) {
+	constructor(person_id,userid,prison,encounter_type,reg_date,concept_id,encounter_id) {
 
-		this.prisonname = prisonname;
-		this.fullname = fullname;
-		this.gender = gender;
-		this.registrationdate = registrationdate;
-		this.entrydate = entrydate;
-		this.dob = dob;
-		this.regtype = regtype;
-		this.cjnumber = cjnumber;
-		this.cellnumber = cellnumber;
-		this.hivstatus = hivstatus;
-		this.artyes = artyes;
-		this.artno = artno;
-		this.tbyes = tbyes;
-		this.tbno = tbno;
-		this.stiyes = stiyes;
-		this.stino = stino;
-		this.artstartdate = artstartdate;
-		this.artnumber = artnumber;
-		this.regimen = regimen;
-		this.nextappointment = nextappointment;
-		this.currentvl = currentvl;
-		this.vleligibledate =vleligibledate;
-
+		this.person_id = person_id;		
+		this.userid =userid;
+		this.prison =prison;
+		this.encounter_type= encounter_type;
+		this.reg_date = reg_date;
+		this.concept_id = concept_id;
+		this.encounter_id =encounter_id;
+		
 	}
 
 	static find(email) {
-		return db.execute(` SELECT * FROM inmates WHERE cjnumber = '${cjnumber}' `);
+		//return db.execute(` SELECT * FROM inmates WHERE cjnumber = '${cjnumber}' `);
 	}
-
-	/*static save(patient) {
-		return db.execute(
-
-			`INSERT INTO inmates (prisonname,fullname,gender,registration_date,entry_date,dob,reg_type,cj_number,cell_number,hiv_status,art_status,tb_status,
-			                      sti_status,art_start_date,art_number,regimen,next_appointment,current_vl,vleligible_date )
-			 VALUES ('${patient.prisonname}', '${patient.fullname}','${patient.gender}','${patient.registrationdate}','${patient.entrydate}','${patient.dob}',
-			  '${patient.regtype}','${patient.cjnumber}','${patient.cellnumber}','${patient.hivstatus}','${patient.artyes}','${patient.tbyes}',
-			  '${patient.stiyes}','${patient.artstartdate}','${patient.artnumber}','${patient.regimen}', '${patient.nextappointment}', '${patient.currentvl}','${patient.vleligibledate}')`
-		);
-	}*/
-
 
 	static save(patient) {
 		return db.execute(
 
-			`INSERT INTO demographics (prisonname,fullname,gender,reg_date,entry_date,dob_birth,reg_type,criman_justice,cell_number,hiv_status,art_status,tb_status,
-			                      sti_status)
-			 VALUES ('${patient.prisonname}', '${patient.fullname}','${patient.gender}','${patient.registrationdate}','${patient.entrydate}','${patient.dob}',
-			  '${patient.regtype}','${patient.cjnumber}','${patient.cellnumber}','${patient.hivstatus}','${patient.artyes}','${patient.tbyes}',
-			  '${patient.stiyes}')`
+			`INSERT INTO patient (patient_id,creator)
+			 VALUES ('${patient.person_id}', '${patient.userid}')`
 		);
 	}
+
+static enc(patient) {
+		return db.execute(
+
+			 `INSERT INTO encounter (encounter_type,patient_id,creator,provider_id,location_id,encounter_datetime,date_created,uuid)
+			 VALUES ('${patient.encounter_type}','${patient.person_id}','${patient.userid}','${patient.userid}','${patient.prison}','${patient.reg_date}','${date}','${uuid()}')`
+		);
+	}
+
+
+	static obs(patient) {
+		return db.execute(
+
+			 `INSERT INTO obs (person_id,concept_id,encounter_id,location_id,obs_datetime,date_created,uuid,creator,value_coded)
+			 VALUES ('${patient.person_id}','${patient.concept_id}','${patient.encounter_id}','${patient.prison}','${patient.reg_date}','${date}','${uuid()}','${patient.userid}','7572')`
+		);
+	}
+
+
+	
 };

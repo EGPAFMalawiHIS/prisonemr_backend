@@ -10,7 +10,7 @@ const User = require('../models/user');
 router.post(
 	'/signup',
 	[
-		body('name').trim().not().isEmpty(),
+		body('fname').trim().not().isEmpty(),
 		body('email')
 			.isEmail()
 			.withMessage('Enter valid email')
@@ -52,7 +52,11 @@ function verifytoken(req,res,next){
  })
 
 }
+router.get('/locations', authController.prisons);
 
+router.get('/regimens', authController.regimens);
+
+router.get('/user_roles', authController.user_roles);
 
 router.post('/patientregister', authController.patient);
 
@@ -61,5 +65,7 @@ router.post('/tbscreen', authController.tbscreen);
 router.post('/artscreen', authController.artscreen);
 
 router.post('/stiscreen', authController.stiscreen);
+
+
 
 module.exports = router;

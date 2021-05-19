@@ -1,36 +1,145 @@
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
-
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Patient = require('../models/patient');
 const tbscreen = require('../models/tbscreen');
 const artscreen = require('../models/artscreen');
 const stiscreen = require('../models/stiscreen');
-
+const Metadata = require('../models/metadata');
 const totals =0;
+
+
+exports.user_roles = async (req, res, next) => {
+
+	const uroles = req.body.usroles;
+	
+
+	try {
+
+		const sroles = await User.search(uroles);
+
+		res.status(200).json(sroles[0]);
+
+
+	} catch (err) {
+		if (!err.statusCode) {
+			res.statusCode = 500;
+		}
+		next(err);
+	}
+};
+
+
+exports.regimens = async (req, res, next) => {
+
+	const reg = req.body.regimens;
+	
+
+	try {
+
+		const sroles = await Metadata.find(reg);
+
+		res.status(200).json(sroles[0]);
+
+
+	} catch (err) {
+		if (!err.statusCode) {
+			res.statusCode = 500;
+		}
+		next(err);
+	}
+};
+
+
+
+exports.prisons = async (req, res, next) => {
+
+	const prison = req.body.locations;
+
+	try {
+
+		const prisons_array = await Metadata.search(prison);
+
+		res.status(200).json(prisons_array[0]);
+
+
+	} catch (err) {
+		if (!err.statusCode) {
+			res.statusCode = 500;
+		}
+		next(err);
+	}
+};
+
+
 
 exports.signup = async (req, res, next) => {
 	const errors = validationResult(req);
 
 	if (!errors.isEmpty()) return;
 
-	const name = req.body.name;
+	const fname = req.body.fname;
+	const lname = req.body.lname;
 	const email = req.body.email;
 	const password = req.body.password;
+	const userx = req.body.usersroles;
 
 	try {
-		const hashedPassword = await bcrypt.hash(password, 12);
+
+		       const pDetails ={email:email}
+
+		const user = await User.find(pDetails);
+
+		if (user[0].length == 1) {
+			const error = Error('User with this email exists.');
+			error.statusCode = 401;
+			throw error;
+			totals++;
+
+		}	
+		
+		
+	  /* const hashedPassword = await bcrypt.hash(password, 12);
 
 		const userDetails = {
-			name: name,
-			email: email,
-			password: hashedPassword,
+			    fname: fname,
+			    lname: lname,
+		  dateofbirth:"2000-05-18",
+		       userid:1,
+		       gender:"M",						
 		};
 
 		const result = await User.save(userDetails);
 
-		res.status(201).json({ message: 'User created succesully.' });
+
+		if(result.length){
+
+			 const id = result[0].insertId;
+
+		const personDetails = {
+			      person_id: id,
+			      fname: fname,
+			     middle_name:null,
+			     userid:1,
+			      lname: lname,
+			 usersroles: userx,
+			     email: email,
+			     password: hashedPassword,
+		     };
+
+			const person_name = await User.record(personDetails);
+
+			const person_address = await User.store(personDetails);
+
+			const users = await User.saves(personDetails);
+
+			const usersroles = await User.saving(personDetails);
+
+
+		}*/
+
+		res.status(201).json({ message: "Account created successfully!" });
 
 
 
@@ -47,14 +156,17 @@ exports.login = async (req, res, next) => {
 	const password = req.body.password;
 
 	try {
-		const user = await User.find(email);
+           const pDetails ={email:email}
+		const user = await User.find(pDetails);
+
 		if (user[0].length !== 1) {
 			const error = Error('User email could not be found.');
 			error.statusCode = 401;
 			throw error;
-			total;
+			totals++;
 
 		}
+
 		const storedUser = user[0][0];
 
 		const isEqual = await bcrypt.compare(password, storedUser.password);
@@ -62,12 +174,17 @@ exports.login = async (req, res, next) => {
 			const error = Error('Invalid password');
 			error.statusCode = 401;
 			throw error;
-			total;
+			totals++;
 		}
+       
+         const personBio = {person_id: storedUser.user_id};
+		       const bio = await User.retrieve(personBio);
+
 		const token = jwt.sign(
 		{
-			email: storedUser.email,
-			userId: storedUser.id,
+			userId: storedUser.person_id,
+			fname:bio[0][0].given_name,
+			lname:bio[0][0].family_name,
 		},
 		'mySecretKey',
 		{
@@ -87,12 +204,7 @@ exports.login = async (req, res, next) => {
 	}
 };
 
-//exports.username = async (req, res,next) => {
 
-
-//res.status(200);
-
-//};
 
 exports.patient = async (req, res, next) => {
 	const errors = validationResult(req);
@@ -101,7 +213,7 @@ exports.patient = async (req, res, next) => {
 
 	const prisonname = req.body.prisonname;
 	const fullname = req.body.fullname;
-	const gender = req.body.gender;
+	var gender = req.body.gender;
 	const registrationdate = req.body.registrationdate;
 	const entrydate =req.body.entrydate;
 	const dob = req.body.dob;
@@ -117,39 +229,130 @@ exports.patient = async (req, res, next) => {
 	const regimen =req.body.regimen;
 	const nextappointment = req.body.nextappointment;
 	const currentvl= req.body.currentvl;
-	const vleligibledate=req.body.vleligibledate
+	const vleligibledate=req.body.vleligibledate;
+	var admuser=req.body.userId;
+	var admuser=admuser.toString();
+    const name_array = fullname.split(" ");
+    const fname =name_array[0];
+    var mname =name_array[1];
+    var lname =name_array[2];
+    var gender_description;
+       
 
 	try {
+           if (gender ==1){        
+                         gender ="M";
+                         gender_description ="Male";
+                      }
+                 else{
+                        
+                        if (gender ==2){                            
+                            gender_description ="FP";
+                        }
+                        else if(gender ==3){
+                            gender_description ="FNP";
+                        }
+                        else{
+                              gender_description ="FBF";
+                            }
+
+                       gender ="F";
+                     }
+           if (lname ==null){        
+                         lname =mname;
+                         mname =null;
+                      }
 
 
 		const userDetails = {
-
-			prisonname: prisonname,
-			fullname: fullname,
-			gender: gender,
-			registrationdate: registrationdate,
-			entrydate: entrydate,
-			dob: dob,
-			regtype: regtype,
-			cjnumber:cjnumber,
-			cellnumber:cellnumber,
-			hivstatus: hivstatus,
-			artyes: artyes,
-			tbyes: tbyes,
-			stiyes: stiyes,
-			artstartdate: artstartdate,
-			artnumber:artnumber,
-			regimen:regimen,
-			nextappointment:nextappointment,
-			currentvl:currentvl,
-			vleligibledate:vleligibledate
+			
+			     gender: gender,			
+			dateofbirth: dob,
+			    userid: admuser,
 
 		};
 
-		const result = await Patient.save(userDetails);
+	   const result = await User.save(userDetails);
 
-		res.status(201).json({ message: 'Patient demographics captured succesully.' });
 
+		if(result.length){
+
+			 const id = result[0].insertId;
+
+		const personDetails = {
+			     person_id: id,
+			      fname: fname,
+			      lname: lname,
+			middle_name: mname,
+			   userid: admuser,
+			   
+		     };
+
+            const personAtt =[];
+
+              personAtt.push({    attribute_id:18,
+               	               attribute_value:cellnumber });
+               personAtt.push({   attribute_id:23,
+               	               attribute_value:hivstatus });
+               personAtt.push({   attribute_id:30,
+               	               attribute_value:cjnumber });
+               personAtt.push({   attribute_id:31,
+               	               attribute_value:entrydate });
+               personAtt.push({   attribute_id:32,
+               	               attribute_value:regtype });
+                personAtt.push({   attribute_id:33,
+               	               attribute_value: gender_description });
+
+              for(var i =0; i < personAtt.length;i++ ){
+
+                         const att_person = {
+
+		         person_id: id,
+			  attribute_id: personAtt[i].attribute_id,
+		   attribute_value: personAtt[i].attribute_value,
+			   userid: admuser,
+			   
+		                       };
+
+		        const person_attribute = await User.keep(att_person);
+
+              }
+
+		     
+
+			const person_name = await User.record(personDetails);
+
+			const patients = await Patient.save(personDetails);
+
+            const personsEncounter = {
+			     person_id: id,
+			      prison:prisonname,
+			      reg_date: registrationdate,
+			      encounter_type: 5,
+			        userid: admuser,			   
+		     };
+
+			const encounter = await Patient.enc(personsEncounter);
+
+			       const eid =encounter[0].insertId;
+
+			const personsObs = {
+			     person_id: id,
+			     encounter_id:eid,
+			     prison:prisonname,
+			      reg_date: registrationdate,			   
+			    userid: admuser,
+			    concept_id :3289,
+			   
+		     };
+
+			const obs = await Patient.obs(personsObs);
+
+
+		}
+
+		res.status(201).json({message:"Imnate demographics captured successfully!!"});
+         //res.status(201).json(personsObs)
 
 
 	} catch (err) {
@@ -300,6 +503,7 @@ exports.artscreen = async (req, res, next) => {
 
 
 exports.stiscreen = async (req, res, next) => {
+
 	const errors = validationResult(req);
 
 	if (!errors.isEmpty()) return;
