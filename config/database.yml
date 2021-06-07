@@ -1,0 +1,46 @@
+# Mysql configurations
+default: &default
+  host: localhost
+  adapter: mysql2
+  username: pamzey
+  password: password@2021
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: fpam_openmrs
+test:
+  <<: *default
+  database: openmrs_18test
+
+production:
+  <<: *default
+  database: mlambe_api_18
+
+# Uncomment out the following and update them accordingly if
+# you need to sync hts and anc to RDS.
+#
+#hts:
+#  adapter: mysql2
+#  username: root
+#  database: 
+#  password: 
+#  host: localhost
+#  pool: 500
+
+#anc:
+#  adapter: mysql2
+#  username: root
+#  database: 
+#  password: 
+#  host: localhost
+#  pool: 500
+
+healthdata:
+  adapter: mysql2
+  username: root
+  database: healthdata
+  password: 
+  host: localhost
+  pool: 500
