@@ -3,7 +3,6 @@ class Api::V1::PeopleController < ApplicationController
   def index
     render json: paginate(Person)
   end
-
   # Search for patients by name and gender
   #
   # GET /search/people?given_name={value}&family_name={value}&gender={value}
