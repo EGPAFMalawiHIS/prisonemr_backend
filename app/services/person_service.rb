@@ -15,10 +15,13 @@ class PersonService
 
   # Map of API person attributes to database names
   PERSON_ATTRIBUTES_FIELDS = {
-    art_status: 'ART status at registration',
-    prison_name: 'Current Place Of Residence',
+    hiv_status:'HIV status at entry',
+    art_status:'ART status at registration',
+    tb_status:'TB History',
+    sti_status:'STI History',
+    prison_name:'Current Place Of Residence',
     criminal_justice_number: 'Criminal Justice Number',
-    cell_number: 'Cell Number',
+    cell_number:'Cell Number',
     entry_date: 'Entry Date',
     registration_type: 'Registration Type',
     prisoner_gender: 'Prisoner gender',

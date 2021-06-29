@@ -19,7 +19,6 @@ class Api::V1::PatientStatesController < ApplicationController
     render status: :no_content
   end
   # TODO: Implement show, and maybe update...
-
   private
 
   def program
@@ -34,3 +33,4 @@ class Api::V1::PatientStatesController < ApplicationController
     PatientStateService.new
   end
 end
+

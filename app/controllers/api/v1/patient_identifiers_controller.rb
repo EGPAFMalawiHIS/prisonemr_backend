@@ -14,6 +14,7 @@ class Api::V1::PatientIdentifiersController < ApplicationController
   def show
     render json: @patient_identifier
   end
+  
 
   # POST /patient_identifiers
   def create

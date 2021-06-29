@@ -13,7 +13,7 @@ class ApplicationController < ActionController::API
   include ExceptionHandler
 
   CURRENT_LOCATION_PROPERTY = 'current_health_center_id'
-  DEFAULT_PAGE_SIZE = 1000
+  DEFAULT_PAGE_SIZE = 10
 
   def authenticate
     authentication_token = request.headers['Authorization']
