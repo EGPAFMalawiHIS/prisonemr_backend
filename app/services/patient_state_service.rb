@@ -31,7 +31,6 @@ class PatientStateService
     patient_program = PatientProgram.where(program: program, patient: patient)\
                                     .where('DATE(date_enrolled) <= ?', ref_date)\
                                     .last
-
     unless patient_program
       raise NotFoundError,
             "PatientProgram(patient_id = #{patient&.id}, program_id = #{program&.id}, date_enrolled <= #{ref_date}) not found"

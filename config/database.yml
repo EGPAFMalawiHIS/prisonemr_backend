@@ -28,7 +28,6 @@ production:
 #  password: 
 #  host: localhost
 #  pool: 500
-
 #anc:
 #  adapter: mysql2
 #  username: root
