@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'securerandom'
 require 'dde_client'
 require 'person_service'
@@ -11,6 +10,10 @@ class Api::V1::PatientsController < ApplicationController
   before_action :authenticate, except: %i[print_national_health_id_label print_filing_number print_tb_number print_tb_lab_order_summary]
 
   include ModelUtils
+
+   def index
+    render json: paginate(Patient)  #this end point was added by Pamzey
+  end
 
   def show
     render json: patient
@@ -39,6 +42,7 @@ class Api::V1::PatientsController < ApplicationController
   end
 
 
+
   def create
     person = Person.find(params.require(:person_id))
     program = Program.find(params.require(:program_id))
@@ -48,7 +52,10 @@ class Api::V1::PatientsController < ApplicationController
   end
 
   def update
-    render json: service.update_patient(patient, params.require(:person_id))
+
+      #patient = params.permit(%i[dead death_date cause_of_death program_id id person_id])
+
+       render json: service.update_patient(patient, params.require(:person_id))
   end
 
   def destroy
@@ -147,7 +154,6 @@ class Api::V1::PatientsController < ApplicationController
     date = params[:date]&.to_date || Date.today
     render json: service.last_htn_drugs_received_summary(patient, date)
   end
-
   # Returns all drugs received on last dispensation
   def last_drugs_received
     date = params[:date]&.to_date || Date.today
