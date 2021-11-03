@@ -56,6 +56,7 @@ class PatientService
       end
     end
   end
+  
 
   # Change patient's person id
   #

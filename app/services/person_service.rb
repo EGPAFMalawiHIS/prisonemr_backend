@@ -17,6 +17,7 @@ class PersonService
   PERSON_ATTRIBUTES_FIELDS = {
     hiv_status:'HIV status at entry',
     art_status:'ART status at registration',
+    initiate_on_art:'Initiate on ART',
     tb_status:'TB History',
     sti_status:'STI History',
     prison_name:'Current Place Of Residence',

@@ -88,7 +88,6 @@ class Api::V1::EncountersController < ApplicationController
       render json: encounter.errors, status: :bad_request
     end
   end
-
   # Update an existing encounter
   #
   # PUT /encounter/:id

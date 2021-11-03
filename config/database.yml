@@ -35,7 +35,6 @@ production:
 #  password: 
 #  host: localhost
 #  pool: 500
-
 healthdata:
   adapter: mysql2
   username: root

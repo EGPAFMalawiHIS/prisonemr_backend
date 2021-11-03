@@ -26,6 +26,7 @@ module ObservationService
         [observation, child_observation]
       end
     end
+    
 
     private
 
