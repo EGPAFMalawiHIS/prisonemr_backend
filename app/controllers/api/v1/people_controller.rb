@@ -76,7 +76,10 @@ class Api::V1::PeopleController < ApplicationController
     render json: clients
   end
 
+<<<<<<< HEAD
   
+=======
+>>>>>>> 5333c6214f4b50e2a95af8800473f6f852c1cd95
   private
 
   PERSON_ATTRIBUTES = %i[
