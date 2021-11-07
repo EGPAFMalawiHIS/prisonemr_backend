@@ -75,13 +75,10 @@ class Api::V1::ObservationsController < ApplicationController
   #   value_coded_name_id* - Only required if value_type above is coded
   #   order_id, comments
   def update
-<<<<<<< HEAD
+
     update_params = params.permit(%i[person_id concept_id encounter_id 
                                      value_datetime value_text]) # FIX-ME: This is highly unsafe
-=======
     update_params = params.permit! # FIX-ME: This is highly unsafe
->>>>>>> 5333c6214f4b50e2a95af8800473f6f852c1cd95
-
     observation = Observation.find(params[:id])
     if observation.update(update_params)
       render json: observation, status: :created

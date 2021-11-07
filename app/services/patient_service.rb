@@ -56,10 +56,7 @@ class PatientService
       end
     end
   end
-<<<<<<< HEAD
-  
-=======
->>>>>>> 5333c6214f4b50e2a95af8800473f6f852c1cd95
+
 
   # Change patient's person id
   #

@@ -6,11 +6,8 @@ require 'set'
 class PersonService
   LOGGER = Logger.new STDOUT
 
-<<<<<<< HEAD
   PERSON_TRUNK_FIELDS = %i[dead cause_of_death death_date gender birthdate birthdate_estimated].freeze
-=======
   PERSON_TRUNK_FIELDS = %i[gender birthdate birthdate_estimated].freeze
->>>>>>> 5333c6214f4b50e2a95af8800473f6f852c1cd95
   PERSON_NAME_FIELDS = %i[given_name family_name middle_name].freeze
   PERSON_ADDRESS_FIELDS = %i[current_district current_traditional_authority
                              current_village home_district
@@ -21,10 +18,7 @@ class PersonService
   PERSON_ATTRIBUTES_FIELDS = {
     hiv_status:'HIV status at entry',
     art_status:'ART status at registration',
-<<<<<<< HEAD
     initiate_on_art:'Initiate on ART',
-=======
->>>>>>> 5333c6214f4b50e2a95af8800473f6f852c1cd95
     tb_status:'TB History',
     sti_status:'STI History',
     prison_name:'Current Place Of Residence',
@@ -47,10 +41,6 @@ class PersonService
     end
   end
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5333c6214f4b50e2a95af8800473f6f852c1cd95
   def update_person(person, params)
     params = params.select { |k, _| PERSON_TRUNK_FIELDS.include? k.to_sym }
     person.update params unless params.empty?

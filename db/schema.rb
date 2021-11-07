@@ -1048,7 +1048,7 @@ ActiveRecord::Schema.define(version: 2021_05_05_072331) do
     t.integer "voided_by"
   end
 
-  create_table "moh_regimen_name", primary_key: "regimen_name_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "moh_regimen_names", primary_key: "regimen_name_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
