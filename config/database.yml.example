@@ -3,20 +3,20 @@ default: &default
   host: localhost
   adapter: mysql2
   username: root
-  password: P@ch321!
+  password: password
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
 development:
   <<: *default
-  database: openmrs_likuni
+  database: prison_openmrs
 test:
   <<: *default
-  database: openmrs_test
+  database: openmrs_18test
 
 production:
   <<: *default
-  database: mlambe_api_production
+  database: mlambe_api_18
 
 # Uncomment out the following and update them accordingly if
 # you need to sync hts and anc to RDS.
@@ -41,6 +41,6 @@ healthdata:
   adapter: mysql2
   username: root
   database: healthdata
-  password: 
+  password:
   host: localhost
   pool: 500

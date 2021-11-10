@@ -2,14 +2,14 @@
 default: &default
   host: localhost
   adapter: mysql2
-  username: pamzey
-  password: password@2021
+  username: root
+  password: password
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
 development:
   <<: *default
-  database: fpam_openmrs
+  database: prison_openmrs
 test:
   <<: *default
   database: openmrs_18test
@@ -28,6 +28,7 @@ production:
 #  password: 
 #  host: localhost
 #  pool: 500
+
 #anc:
 #  adapter: mysql2
 #  username: root
@@ -35,10 +36,11 @@ production:
 #  password: 
 #  host: localhost
 #  pool: 500
+
 healthdata:
   adapter: mysql2
   username: root
   database: healthdata
-  password: 
+  password:
   host: localhost
   pool: 500
