@@ -7,7 +7,6 @@ class PersonService
   LOGGER = Logger.new STDOUT
 
   PERSON_TRUNK_FIELDS = %i[dead cause_of_death death_date gender birthdate birthdate_estimated].freeze
-  PERSON_TRUNK_FIELDS = %i[gender birthdate birthdate_estimated].freeze
   PERSON_NAME_FIELDS = %i[given_name family_name middle_name].freeze
   PERSON_ADDRESS_FIELDS = %i[current_district current_traditional_authority
                              current_village home_district

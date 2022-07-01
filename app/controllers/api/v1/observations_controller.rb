@@ -76,9 +76,10 @@ class Api::V1::ObservationsController < ApplicationController
   #   order_id, comments
   def update
 
-    update_params = params.permit(%i[person_id concept_id encounter_id 
-                                     value_datetime value_text]) # FIX-ME: This is highly unsafe
     update_params = params.permit! # FIX-ME: This is highly unsafe
+
+    update_params = params.permit(%i[person_id concept_id encounter_id 
+                                     value_datetime value_text]) # FIX-ME: This is highly unsafe    
     observation = Observation.find(params[:id])
     if observation.update(update_params)
       render json: observation, status: :created
