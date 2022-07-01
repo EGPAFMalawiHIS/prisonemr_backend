@@ -38,7 +38,6 @@ class Api::V1::PatientsController < ApplicationController
                                                         filters[:middle_name],
                                                         filters[:family_name],
                                                         filters[:gender])
-
     render json: patients
   end
 
