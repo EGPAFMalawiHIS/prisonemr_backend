@@ -51,7 +51,7 @@ class ApplicationController < ActionController::API
     limit = (params[:page_size] || DEFAULT_PAGE_SIZE).to_i
     offset = (params[:page] || 0).to_i * DEFAULT_PAGE_SIZE
 
-    queryset.offset(offset).limit(limit)
+    queryset.offset(offset).limit(limit).order(date_created: :desc)
   end
 
   def parse_date(str_date)
