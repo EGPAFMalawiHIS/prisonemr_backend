@@ -230,7 +230,7 @@ Rails.application.routes.draw do
       get '/labels/location', to: 'locations#print_label'
       get '/www', to: 'prison#ping_google'
       get '/inmates', to: 'prison#population'
-      get '/dbs_comaparison', to: 'prison#compare_population'
+      get '/dbs_comparison', to: 'prison#compare_population'
 
       # Search
       get '/search/given_name' => 'person_names#search_given_name'
