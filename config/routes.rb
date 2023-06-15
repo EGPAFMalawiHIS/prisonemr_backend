@@ -228,8 +228,9 @@ Rails.application.routes.draw do
       post '/dde/patients/merge', to: 'dde#merge_patients'
 
       get '/labels/location', to: 'locations#print_label'
-      get '/inmates', to: 'prison#population'
       get '/www', to: 'prison#ping_google'
+      get '/inmates', to: 'prison#population'
+      get 'dbs_comaparison/', to: 'prison#compare_population'
 
       # Search
       get '/search/given_name' => 'person_names#search_given_name'
