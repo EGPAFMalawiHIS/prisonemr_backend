@@ -6,40 +6,27 @@ require 'net/http'
 require 'timeout'
 
 class Api::V1::PrisonController < ApplicationController
-  skip_before_action :authenticate, only: %i[print_label]
-
  
-  def ping_google
+   def ping_google
 
-         result = 404
-         timeout_duration = 10
-         http = Net::HTTP.new('www.google.com', 80)
-         http.read_timeout = timeout_duration
-
+         url = URI.parse('http://www.google.com')
+        http = Net::HTTP.new(url.host, url.port)
+        http.open_timeout = 10
+        http.read_timeout = 10
+        result = 404
 
         begin
-                 response = Timeout.timeout(timeout_duration) do
-                    http.get('/')
-                 end
-               
-                # Check the response
-               if response.code == '200'
-                   result = 200
-               else
-                   result = 404
-               end
-            
-              rescue Timeout::Error
+              response = http.get(url.request_uri)
 
-                 result = 404
+             result = 200 if response.code == '200'
+             rescue Net::OpenTimeout, Net::ReadTimeout
+             rescue StandardError => e
+             puts "An error occurred: #{e.message}"
+        end
 
-              rescue StandardError => e
-                 puts "An error occurred: #{e.message}"
-       end    
+          render json: result
 
-    render json: result
-
-  end
+   end
   
   def population
         
@@ -54,7 +41,7 @@ class Api::V1::PrisonController < ApplicationController
   	    site_count = params.require(:total) 
   	    location_id = params.require(:location_id)
   	    server_count = PrisonService.count_available_inmates location_id  	       
-        render json: server_count == site_count ? true : false
+        render json: server_count.to_i == site_count.to_i ? true : false
 
   end
 
