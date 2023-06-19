@@ -30,7 +30,7 @@ class Api::V1::PrisonController < ApplicationController
   
   def population
         
-        location_id = params.require(:location_id).permit!.values
+        location_id = params.require(:location_id)
         site = PrisonService.count_available_inmates location_id
         render json: site
 
@@ -38,8 +38,8 @@ class Api::V1::PrisonController < ApplicationController
 
   def compare_population
 
-  	    site_count = params.require(:inmates).permit!.values 
-  	    location_id = params.require(:location_id).permit!.values
+  	    site_count = params.require(:inmates) 
+  	    location_id = params.require(:location_id)
   	    server_count = PrisonService.count_available_inmates location_id  	       
         render json: server_count.size == site_count.size ? true : false
 
