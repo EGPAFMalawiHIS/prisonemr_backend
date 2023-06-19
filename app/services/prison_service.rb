@@ -4,13 +4,6 @@ class PrisonService
 
   def self.count_available_inmates(location_id)
 
-      #return Patient.all.joins('INNER JOIN patient_identifier ON patient_identifier.patient_id = patient.patient_id')
-                    #.where(patient_identifier:{location_id:location_id})
-                    #.count 
-
-       
-
-
          return  Patient.joins('INNER JOIN patient_identifier ON patient_identifier.patient_id = patient.patient_id
                                 INNER JOIN person ON person.person_id = patient_identifier.patient_id
                                 INNER JOIN person_name ON person_name.person_id = person.person_id')
@@ -23,11 +16,9 @@ class PrisonService
                                      lastname:client.lname,
                                      birthdate:client.dob,
                                      gender:client.sex
-                                  }                                           
+                                 }                                           
 
-                    end  
-
-                
+                    end               
     
   end
 
