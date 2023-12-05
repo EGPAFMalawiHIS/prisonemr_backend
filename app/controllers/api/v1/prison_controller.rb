@@ -4,6 +4,7 @@ require 'utils/remappable_hash'
 require 'zebra_printer/init'
 require 'net/http'
 require 'timeout'
+require 'active_support/inflector'
 
 class Api::V1::PrisonController < ApplicationController
  
@@ -45,7 +46,47 @@ class Api::V1::PrisonController < ApplicationController
 
   end
 
+  def scan_changes
 
+        search_date = params[:last_scanned]
+        patients = []
+      
+        model_names = ["obs","encounters", "patients", "persons","person_names", "person_attributes"]
+
+        model_names.each do |model_name|
+        singular_model_name = ActiveSupport::Inflector.singularize(model_name).classify
+
+        model_class = singular_model_name.constantize unless singular_model_name == "Ob"
+
+        model_class = Observation if model_name == 'obs'
+
+        column_name = if model_class == Observation
+                          'obs_datetime'
+                      else
+                          'date_changed'
+                      end
+  
+      next unless model_class.table_exists? # Skip if the table doesn't exist for this model
+  
+         #results = model_class.where("#{column_name} >= ? OR date_created >= ?", search_date,search_date)
+         results = model_class.where("#{column_name} >= ?",search_date)
+  
+          unless results.empty?
+                #puts "Results from #{model_name} table:"
+                results.each do |row|         
+
+                    if row[:date_created] != row["#{column_name}"]
+                        patients.push(row[:person_id], row[:patient_id]).uniq!
+                        puts row.inspect
+                    end
+               end
+          end
+     end
+
+     render json: patients.compact!
+  
+
+  end
   
 end
 
