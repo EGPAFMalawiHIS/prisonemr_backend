@@ -5,7 +5,7 @@ class ReportService
     'HIV PROGRAM' => ArtService::ReportEngine,
     'ANC PROGRAM' => AncService::ReportEngine,
     'OPD PROGRAM' => OPDService::ReportEngine,
-    'VMMC PROGRAM' => VMMCService::ReportEngine,
+    'VMMC PROGRAM' => VmmcService::ReportEngine,
     'TB PROGRAM' => TbService::ReportEngine
   }.freeze
   LOGGER = Rails.logger
