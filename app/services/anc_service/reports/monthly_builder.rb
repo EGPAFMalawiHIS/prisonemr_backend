@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ANCService
+module AncService
   module Reports
     class MonthlyBuilder
       PROGRAM = Program.find_by name: 'ANC Program'

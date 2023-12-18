@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-module ANCService
+module AncService
   class ReportEngine
     attr_reader :program
 
     LOGGER = Rails.logger
 
     REPORTS = {
-      'COHORT' => ANCService::Reports::Cohort,
-      'MONTHLY' => ANCService::Reports::Monthly,
-      'ANC_COHORT_DISAGGREGATED' => ANCService::Reports::CohortDisaggregated,
-      'VISITS' => ANCService::Reports::VisitsReport
+      'COHORT' => AncService::Reports::Cohort,
+      'MONTHLY' => AncService::Reports::Monthly,
+      'ANC_COHORT_DISAGGREGATED' => AncService::Reports::CohortDisaggregated,
+      'VISITS' => AncService::Reports::VisitsReport
     }.freeze
 
     def generate_report(type:, **kwargs)

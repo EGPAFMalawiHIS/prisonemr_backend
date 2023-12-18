@@ -93,7 +93,7 @@ module Api
       end
 
       def workflow_engine(patient, date)
-        ANCService::WorkflowEngine.new patient:,
+        AncService::WorkflowEngine.new patient:,
                                        program: Program.find_by_name('ANC PROGRAM'),
                                        date:
       end
@@ -101,7 +101,7 @@ module Api
       def essentials
         patient = params[:patientent_id]
         date = params[:date]
-        anc_service = ANCService::PatientsEngine.new program: Program.find_by_name('ANC PROGRAM')
+        anc_service = AncService::PatientsEngine.new program: Program.find_by_name('ANC PROGRAM')
         render json: anc_service.essentials(patient, date)
       end
     end
