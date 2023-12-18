@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.5.3'
+ruby '3.2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.1'
+gem 'rails', '~> 7.0.0'
 # Use sqlite3 as the database for Active Record
 gem 'mysql2'
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 5.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -37,11 +39,11 @@ gem 'test-unit'
 gem 'rswag-api'
 gem 'rswag-ui'
 
-gem 'his_emr_api_lab', '0.0.14'
+gem 'his_emr_api_lab', git: 'https://github.com/EGPAFMalawiHIS/HIS-EMR-API-Lab', branch: 'upgrade/rails-7'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
 end
 
 group :test do
@@ -59,6 +61,6 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
-gem "whenever", "~> 1.0"
+gem 'whenever', '~> 1.0'
