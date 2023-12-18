@@ -1,12 +1,12 @@
 
 require 'set'
 
-module OPDService
+module OpdService
   class ReportEngine
     include ModelUtils
 
     REPORTS = {
-      'LA_PRESCRIPTIONS' => OPDService::Reports::LaPrescriptions
+      'LA_PRESCRIPTIONS' => OpdService::Reports::LaPrescriptions
     }
 
     def initialize

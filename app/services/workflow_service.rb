@@ -5,10 +5,10 @@ class WorkflowService
   ENGINES = {
     # Table mapping program concept name to engine
     'HIV PROGRAM' => ArtService::WorkflowEngine,
-    'OPD PROGRAM' => OPDService::WorkflowEngine,
+    'OPD PROGRAM' => OpdService::WorkflowEngine,
     'TB PROGRAM' => TbService::WorkflowEngine,
     'ANC PROGRAM' => AncService::WorkflowEngine,
-    'OPD PROGRAM' => OPDService::WorkflowEngine,
+    'OPD PROGRAM' => OpdService::WorkflowEngine,
     'VMMC PROGRAM' => VmmcService::WorkflowEngine,
     'CXCA PROGRAM' => CxcaService::WorkflowEngine
   }.freeze
