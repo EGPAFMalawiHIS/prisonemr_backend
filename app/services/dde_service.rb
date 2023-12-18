@@ -2,8 +2,8 @@
 
 require 'logger'
 
-class DDEService
-  class DDEError < StandardError; end
+class DdeService
+  class DdeError < StandardError; end
 
   DDE_CONFIG_PATH = 'config/application.yml'
   LOGGER = Logger.new(STDOUT)
@@ -39,7 +39,7 @@ class DDEService
     dde_patient = openmrs_to_dde_patient(patient)
     response, status = dde_client.post('update_person', dde_patient)
 
-    raise DDEError, "Failed to update person in DDE: #{response}" unless status == 200
+    raise DdeError, "Failed to update person in DDE: #{response}" unless status == 200
 
     patient
   end
@@ -99,7 +99,7 @@ class DDEService
                        }
     )
 
-    raise DDEError, "DDE patient search failed: #{status} - #{response}" unless status == 200
+    raise DdeError, "DDE patient search failed: #{status} - #{response}" unless status == 200
 
     response.collect do |match|
       doc_id = match['person']['id']
@@ -137,7 +137,7 @@ class DDEService
     unless status == 200 && !response.empty?
       # The DDE's reassign_npid end point responds with a 200 - OK but returns
       # an empty object when patient with given doc_id is not found.
-      raise DDEError, "Failed to reassign npid: DDE Response => #{status} - #{response}"
+      raise DdeError, "Failed to reassign npid: DDE Response => #{status} - #{response}"
     end
 
     return save_remote_patient(response) unless patient
@@ -188,7 +188,7 @@ class DDEService
     response, _status = dde_client.post('search_by_npid', npid: npid)
 
     unless response.class == Array
-      raise DDEError, "Patient search by npid failed: DDE Response => #{response}"
+      raise DdeError, "Patient search by npid failed: DDE Response => #{response}"
     end
 
     response
@@ -199,7 +199,7 @@ class DDEService
                                                                      family_name: family_name,
                                                                      gender: gender)
     unless response.class == Array
-      raise DDEError, "Patient search by name and gender failed: DDE Response => #{response}"
+      raise DdeError, "Patient search by name and gender failed: DDE Response => #{response}"
     end
 
     response
@@ -209,7 +209,7 @@ class DDEService
     response, _status = dde_client.post('search_by_doc_id', doc_id: doc_id)
 
     unless response.class == Array
-      raise DDEError, "Patient search by doc_id failed: DDE Response => #{response}"
+      raise DdeError, "Patient search by doc_id failed: DDE Response => #{response}"
     end
 
     response

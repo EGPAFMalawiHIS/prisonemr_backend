@@ -474,7 +474,7 @@ class PatientService
   end
 
   def dde_service(program)
-    DDEService.new(program: program)
+    DdeService.new(program: program)
   end
 
   # Blesses patient with a v3 npid
