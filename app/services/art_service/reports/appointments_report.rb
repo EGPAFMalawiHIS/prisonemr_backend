@@ -157,23 +157,23 @@ module ARTService
       end
 
       def client_info(patient_id, appointment_date)
-        person = ActiveRecord::Base.connection.select_one <<EOF
-        SELECT
-          n.given_name, n.family_name, p.birthdate, p.gender,
-          i.identifier arv_number, a.value cell_number,
-          s.state_province district, s.county_district ta,
-          s.city_village village
-        FROM person p
-        LEFT JOIN person_name n ON n.person_id = p.person_id
-        LEFT JOIN patient_identifier i ON i.patient_id = p.person_id
-        AND i.voided = 0 AND i.identifier_type = 4
-        LEFT JOIN person_attribute a ON a.person_id = p.person_id
-        AND a.voided = 0 AND a.person_attribute_type_id = 12
-        LEFT JOIN person_address s ON s.person_id = p.person_id
-        AND s.voided = 0 WHERE p.person_id = #{patient_id}
-        GROUP BY p.person_id, DATE(p.date_created)
-        ORDER BY p.person_id, p.date_created;
-EOF
+        person = ActiveRecord::Base.connection.select_one <<~SQL
+          SELECT
+            n.given_name, n.family_name, p.birthdate, p.gender,
+            i.identifier arv_number, a.value cell_number,
+            s.state_province district, s.county_district ta,
+            s.city_village village
+          FROM person p
+          LEFT JOIN person_name n ON n.person_id = p.person_id
+          LEFT JOIN patient_identifier i ON i.patient_id = p.person_id
+          AND i.voided = 0 AND i.identifier_type = 4
+          LEFT JOIN person_attribute a ON a.person_id = p.person_id
+          AND a.voided = 0 AND a.person_attribute_type_id = 12
+          LEFT JOIN person_address s ON s.person_id = p.person_id
+          AND s.voided = 0 WHERE p.person_id = #{patient_id}
+          GROUP BY p.person_id, DATE(p.date_created)
+          ORDER BY p.person_id, p.date_created;
+        SQL
 
         current_outcome = get_current_outcome(patient_id)
         return nil if current_outcome.match(/died/i) || current_outcome.match(/transfer/i) || current_outcome.match(/stop/i)
@@ -204,12 +204,12 @@ EOF
       end
 
       def eventually_came_on(patient_id, date)
-        data = ActiveRecord::Base.connection.select_one <<EOF
+        data = ActiveRecord::Base.connection.select_one <<~SQL
         SELECT MIN(encounter_datetime) visit_date FROM encounter
         WHERE patient_id = #{patient_id}
         AND encounter_type IN(#{HIV_ENCOUNTERS.join(',')})
         AND encounter_datetime > '#{date.to_date.strftime('%Y-%m-%d 23:59:59')}';
-EOF
+SQL
 
         return data['visit_date'].to_date rescue nil
       end

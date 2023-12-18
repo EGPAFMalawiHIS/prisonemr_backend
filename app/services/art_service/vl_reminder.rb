@@ -13,12 +13,12 @@ class VLReminder
 
   def vl_reminder_info
     begin
-      months_gone = ActiveRecord::Base.connection.select_one <<EOF
-      SELECT TIMESTAMPDIFF(MONTH, DATE('#{@earliest_start_date.to_date}'), DATE('#{@date}')) AS months;
-EOF
+      months_gone = ActiveRecord::Base.connection.select_one <<~SQL
+        SELECT TIMESTAMPDIFF(MONTH, DATE('#{@earliest_start_date.to_date}'), DATE('#{@date}')) AS months;
+      SQL
 
       months_gone = months_gone['months'].to_i
-    rescue
+    rescue StandardError
       return {}
     end
 

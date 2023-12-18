@@ -124,9 +124,9 @@ module Api
       end
 
       def on_art_for_12_plus_months(patient_id, passed_date)
-        query = ActiveRecord::Base.connection.select_one <<EOF
-    SELECT date_antiretrovirals_started(#{patient_id}, DATE("#{passed_date.to_date}")) AS start_date;
-EOF
+        query = ActiveRecord::Base.connection.select_one <<~SQL
+          SELECT date_antiretrovirals_started(#{patient_id}, DATE("#{passed_date.to_date}")) AS start_date;
+        SQL
 
         begin
           (date.to_date - query['start_date'].to_date).to_i >= 1
@@ -136,9 +136,9 @@ EOF
       end
 
       def on_first_line_regimen(patient_id, passed_date)
-        query = ActiveRecord::Base.connection.select_one <<EOF
-    SELECT patient_current_regimen(#{patient_id}, DATE("#{passed_date.to_date}")) AS regimen;
-EOF
+        query = ActiveRecord::Base.connection.select_one <<~SQL
+          SELECT patient_current_regimen(#{patient_id}, DATE("#{passed_date.to_date}")) AS regimen;
+        SQL
 
         begin
           regimen_num = query['regimen'].gsub(/[^\d]/, '')

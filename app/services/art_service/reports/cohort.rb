@@ -69,16 +69,16 @@ module ARTService
           patient_id = r['patient_id'].to_i
 
           if pepfar == false
-            record = ActiveRecord::Base.connection.select_one <<EOF
+            record = ActiveRecord::Base.connection.select_one <<~SQL
             SELECT patient_outcome(#{patient_id}, DATE('#{@end_date}')) AS outcome,
             current_defaulter_date(#{patient_id}, TIMESTAMP('#{@end_date.to_date.strftime('%Y-%m-%d 23:59:59')}')) AS defaulter_date;
-EOF
+SQL
 
           else
-            record = ActiveRecord::Base.connection.select_one <<EOF
+            record = ActiveRecord::Base.connection.select_one <<~SQL
             SELECT pepfar_patient_outcome(#{patient_id}, TIMESTAMP('#{@end_date}')) AS outcome,
             current_pepfar_defaulter_date(#{patient_id}, TIMESTAMP('#{@end_date.to_date.strftime('%Y-%m-%d 23:59:59')}')) AS defaulter_date;
-EOF
+SQL
 
             record['outcome'] = (record['outcome'].match(/defau/i).blank? ? nil : 'Defaulted')
           end
@@ -92,7 +92,7 @@ EOF
               next unless date_within
             end
 
-            person = ActiveRecord::Base.connection.select_one <<EOF
+            person = ActiveRecord::Base.connection.select_one <<~SQL
             SELECT i.identifier arv_number, p.birthdate,
               p.gender, n.given_name, n.family_name, p.person_id patient_id,
               patient_reason_for_starting_art_text(p.person_id) art_reason,
@@ -108,7 +108,7 @@ EOF
             LEFT JOIN person_address s ON s.person_id = p.person_id
             WHERE p.person_id = #{patient_id} GROUP BY p.person_id
             ORDER BY p.person_id, p.date_created;
-EOF
+SQL
 
             next if person.blank?
 
@@ -259,10 +259,10 @@ EOF
         end
 
         unless sql_insert_statement.blank?
-          ActiveRecord::Base.connection.execute <<EOF
+          ActiveRecord::Base.connection.execute <<~SQL
           INSERT INTO cohort_drill_down (reporting_report_design_resource_id, patient_id)
           VALUES #{sql_insert_statement};
-EOF
+SQL
 
         end
 

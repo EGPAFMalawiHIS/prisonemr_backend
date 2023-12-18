@@ -43,14 +43,14 @@ module ARTService
         gender = @gender.first.upcase
 
         patient_ids = []
-        results = ActiveRecord::Base.connection.select_all <<EOF
+        results = ActiveRecord::Base.connection.select_all <<~SQL
         SELECT
           e.patient_id, cohort_disaggregated_age_group(e.birthdate, DATE('#{@end_date}')) age_group
         FROM temp_earliest_start_date e
         INNER JOIN #{@patient_outcome_table} USING(patient_id)
         WHERE cum_outcome = 'On antiretrovirals' AND LEFT(gender,1) = '#{gender}'
         GROUP BY e.patient_id HAVING  age_group = '#{@age_group}';
-EOF
+SQL
 
         (results || []).each do |row|
           patient_ids << row['patient_id'].to_i
@@ -145,13 +145,13 @@ EOF
       def tb_screened(patient_ids)
         return [] if patient_ids.blank?
 
-        results = ActiveRecord::Base.connection.select_all <<EOF
+        results = ActiveRecord::Base.connection.select_all <<~SQL
         SELECT e.*, tb_status FROM temp_earliest_start_date e
           INNER JOIN temp_patient_tb_status s ON s.patient_id = e.patient_id
           INNER JOIN #{@patient_outcome_table} o ON o.patient_id = e.patient_id
           WHERE o.cum_outcome = 'On antiretrovirals' AND e.patient_id IN(#{patient_ids.join(',')})
           AND DATE(e.date_enrolled) <= '#{@end_date.to_date}';
-EOF
+SQL
 
 
         patient_ids = []

@@ -43,13 +43,13 @@ module ARTService
           return [] if patient_ids.blank?
 
 
-          filtered_patients = ActiveRecord::Base.connection.select_all <<EOF
+          filtered_patients = ActiveRecord::Base.connection.select_all <<~SQL
           SELECT
             p.person_id patient_id, birthdate, gender,
             pepfar_patient_outcome(p.person_id, date('#{@end_date}')) outcome,
             cohort_disaggregated_age_group(p.birthdate, DATE('#{@end_date}')) age_group
           FROM person p WHERE p.person_id IN(#{patient_ids.join(",")}) GROUP BY p.person_id;
-EOF
+SQL
 
           (filtered_patients || []).each do |pat|
             outcome = pat['outcome']
@@ -86,7 +86,7 @@ EOF
         end
 
         def get_potential_tx_ml_clients
-          return ActiveRecord::Base.connection.select_all <<EOF
+          return ActiveRecord::Base.connection.select_all <<~SQL
           select
             `p`.`patient_id` AS `patient_id`, pe.birthdate, pe.gender,
              cast(patient_date_enrolled(`p`.`patient_id`) as date) AS `date_enrolled`,
@@ -105,12 +105,12 @@ EOF
                 and pepfar_patient_outcome(p.patient_id, DATE('#{@start_date.to_date - 1.day}')) = 'On antiretrovirals'
           group by `p`.`patient_id`
           HAVING date_enrolled IS NOT NULL AND DATE(date_enrolled) < '#{@start_date.to_date}';
-EOF
+SQL
 
         end
 
         def get_new_potential_tx_ml_clients
-          return ActiveRecord::Base.connection.select_all <<EOF
+          return ActiveRecord::Base.connection.select_all <<~SQL
           SELECT
             `p`.`patient_id` AS `patient_id`, pe.birthdate, pe.gender,
              cast(patient_date_enrolled(`p`.`patient_id`) as date) AS `date_enrolled`,
@@ -130,7 +130,7 @@ EOF
           GROUP BY `p`.`patient_id`
           HAVING date_enrolled IS NOT NULL
           AND date_enrolled BETWEEN '#{@start_date.to_date}' AND '#{@end_date.to_date}';
-EOF
+SQL
 
         end
 

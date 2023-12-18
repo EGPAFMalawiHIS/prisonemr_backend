@@ -80,7 +80,7 @@ SQL
         drug_ids = Drug.joins('INNER JOIN concept_set s ON s.concept_id = drug.concept_id').\
           where("s.concept_set = ?", arv_concept_id).map(&:drug_id)
 
-         return ActiveRecord::Base.connection.select_all <<EOF
+         return ActiveRecord::Base.connection.select_all <<~SQL
         SELECT
           o.patient_id,  drug.name, d.quantity, o.start_date
         FROM orders o
@@ -98,7 +98,7 @@ SQL
             AND t.drug_inventory_id IN(#{drug_ids.join(',')}) AND quantity > 0
           )
         ) GROUP BY (o.order_id);
-EOF
+SQL
 
     end
 
@@ -130,14 +130,14 @@ EOF
             next
           end
 
-          curr_reg = ActiveRecord::Base.connection.select_one <<EOF
+          curr_reg = ActiveRecord::Base.connection.select_one <<~SQL
           SELECT patient_current_regimen(#{patient_id}, '#{(@end_date).to_date}') current_regimen
-EOF
+SQL
 
           next unless (visit_date >= @start_date.to_date && visit_date <= @end_date.to_date)
 
           if clients[patient_id].blank?
-            demo = ActiveRecord::Base.connection.select_one <<EOF
+            demo = ActiveRecord::Base.connection.select_one <<~SQL
             SELECT
               p.birthdate, p.gender, i.identifier arv_number,
               n.given_name, n.family_name
@@ -147,7 +147,7 @@ EOF
             AND i.identifier_type = 4 AND i.voided = 0
             WHERE p.person_id = #{patient_id} GROUP BY p.person_id
             ORDER BY n.date_created DESC, i.date_created DESC;
-EOF
+SQL
 
             clients[patient_id] = {
               arv_number: demo['arv_number'],
@@ -183,14 +183,14 @@ EOF
           medications = arv_dispensention_data(patient_id)
 
           if pepfar
-            outcome_status = ActiveRecord::Base.connection.select_one <<EOF
+            outcome_status = ActiveRecord::Base.connection.select_one <<~SQL
           SELECT patient_pepfar_outcome(#{patient_id}, '#{(@end_date).to_date}') outcome;
-EOF
+SQL
 
           else
-            outcome_status = ActiveRecord::Base.connection.select_one <<EOF
+            outcome_status = ActiveRecord::Base.connection.select_one <<~SQL
           SELECT patient_outcome(#{patient_id}, '#{(@end_date).to_date}') outcome;
-EOF
+SQL
 
           end
 
@@ -204,19 +204,19 @@ EOF
 
           next unless (visit_date >= @start_date.to_date && visit_date <= @end_date.to_date)
 
-          prev_reg = ActiveRecord::Base.connection.select_one <<EOF
+          prev_reg = ActiveRecord::Base.connection.select_one <<~SQL
           SELECT patient_current_regimen(#{patient_id}, '#{(visit_date - 1.day).to_date}') previous_regimen
-EOF
+SQL
 
-          current_reg = ActiveRecord::Base.connection.select_one <<EOF
+          current_reg = ActiveRecord::Base.connection.select_one <<~SQL
           SELECT patient_current_regimen(#{patient_id}, '#{visit_date}') current_regimen
-EOF
+SQL
 
           next if prev_reg['previous_regimen'] == current_reg['current_regimen']
           next if prev_reg['previous_regimen'] == 'N/A'
 
           if clients[patient_id].blank?
-            demo = ActiveRecord::Base.connection.select_one <<EOF
+            demo = ActiveRecord::Base.connection.select_one <<~SQL
             SELECT
               p.birthdate, p.gender, i.identifier arv_number,
               n.given_name, n.family_name, p.person_id
@@ -226,7 +226,7 @@ EOF
             AND i.identifier_type = 4 AND i.voided = 0
             WHERE p.person_id = #{patient_id} GROUP BY p.person_id
             ORDER BY n.date_created DESC, i.date_created DESC;
-EOF
+SQL
 
             clients[patient_id] = {
               arv_number: demo['arv_number'],
