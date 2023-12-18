@@ -55,7 +55,7 @@ module ARTService
 
     def tb_status
       tb_status = PatientState.joins(:patient_program)\
-                              .merge(PatientProgram.where(patient: patient, program: program('tb_program')))\
+                              .merge(PatientProgram.where(patient:, program: program('tb_program')))\
                               .where('start_date <= ?', date.to_date)\
                               .order(:start_date)\
                               .last\
