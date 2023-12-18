@@ -1,0 +1,40 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+
+# Ignore the default PostgreSQL database.
+/db/*.sql
+
+# Ignore generated files.
+/public/assets
+/public/packs
+/public/packs-test
+/public/system
+
+# Ignore uploaded files.
+/storage/*
+
+# Ignore environment-specific files.
+/.env
+/.env.*
+
+# Ignore logs.
+/log/*.log
+
+# Ignore yarn packages.
+/node_modules
+
+# Ignore Mac and Linux system files.
+.DS_Store
+Thumbs.db
+
+Gemfile.lock
+
+# Ignore process files
+*.pid
+
+# ignore all yml files
+*.yml
