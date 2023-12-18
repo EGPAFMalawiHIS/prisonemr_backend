@@ -3,7 +3,7 @@
 class AppointmentService
   ENGINES = {
     'HIV PROGRAM' => ArtService::AppointmentEngine,
-    'TB PROGRAM' => TBService::AppointmentEngine,
+    'TB PROGRAM' => TbService::AppointmentEngine,
     'ANC PROGRAM' => AncService::AppointmentEngine,
     'VMMC PROGRAM' => VMMCService::AppointmentEngine,
     'CXCA PROGRAM' => CXCAService::AppointmentEngine
