@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
   # A summary of a patient's ART clinic visit
   class PatientVisit
     LOGGER = Rails.logger
@@ -193,7 +193,7 @@ module ARTService
     private
 
     def lab_tests_engine
-      @lab_tests_engine = ARTService::LabTestsEngine.new(program: program('HIV Program'))
+      @lab_tests_engine = ArtService::LabTestsEngine.new(program: program('HIV Program'))
     end
 
     def calculate_bmi(weight, height)

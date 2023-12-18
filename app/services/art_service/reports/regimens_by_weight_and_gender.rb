@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
   module Reports
-    Constants = ARTService::Constants
+    Constants = ArtService::Constants
 
     class RegimensByWeightAndGender
       attr_reader :start_date, :end_date

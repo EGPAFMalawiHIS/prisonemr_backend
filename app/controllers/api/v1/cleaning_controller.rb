@@ -5,7 +5,7 @@ module Api
     class CleaningController < ApplicationController
       SERVICES = {
         'ANC PROGRAM' => AncService::DataCleaning,
-        'HIV PROGRAM' => ARTService::DataCleaningTool
+        'HIV PROGRAM' => ArtService::DataCleaningTool
       }.freeze
 
       def index

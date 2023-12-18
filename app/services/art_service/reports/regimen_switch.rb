@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
   module Reports
 
     class RegimenSwitch
@@ -261,7 +261,7 @@ SQL
       end
 
       def pepfar_outcome_builder
-        cohort_builder = ARTService::Reports::CohortDisaggregated.new(name: 'Regimen switch', type: 'pepfar',
+        cohort_builder = ArtService::Reports::CohortDisaggregated.new(name: 'Regimen switch', type: 'pepfar',
         start_date: @start_date.to_date, end_date: @end_date.to_date, rebuild: true)
         cohort_builder.create_mysql_pepfar_current_defaulter
         cohort_builder.create_mysql_pepfar_current_outcome

@@ -2,40 +2,40 @@
 
 require 'ostruct'
 
-module ARTService
+module ArtService
   class ReportEngine
     attr_reader :program
 
     LOGGER = Rails.logger
 
     REPORTS = {
-      'APPOINTMENTS' => ARTService::Reports::AppointmentsReport,
-      'ARV_REFILL_PERIODS' => ARTService::Reports::ArvRefillPeriods,
-      'COHORT' => ARTService::Reports::Cohort,
-      'COHORT_DISAGGREGATED' => ARTService::Reports::CohortDisaggregated,
-      'COHORT_DISAGGREGATED_ADDITIONS' => ARTService::Reports::CohortDisaggregatedAdditions,
-      'COHORT_SURVIVAL_ANALYSIS' => ARTService::Reports::CohortSurvivalAnalysis,
-      'DRUG_DISPENSATIONS' => ARTService::Reports::DrugDispensations,
-      'IPT' => ARTService::Reports::IPTReport,
-      'PATIENTS_WITH_OUTDATED_DEMOGRAPHICS' => ARTService::Reports::PatientsWithOutdatedDemographics,
-      'PATIENTS_ON_DTG' => ARTService::Reports::PatientsOnDTG,
-      'PREGNANT_PATIENTS' => ARTService::Reports::PregnantPatients,
-      'REGIMENS_AND_FORMULATIONS' => ARTService::Reports::RegimensAndFormulations,
-      'REGIMENS_BY_WEIGHT_AND_GENDER' => ARTService::Reports::RegimensByWeightAndGender,
-      'REGIMEN_SWITCH' => ARTService::Reports::RegimenSwitch,
-      'RETENTION' => ARTService::Reports::Retention,
-      'TB_PREV2' => ARTService::Reports::Pepfar::TbPrev2,
-      'TPT_NEWLY_INITIATED' => ARTService::Reports::TptNewlyInitiated,
-      'TX_CURR' => ARTService::Reports::PatientsAliveAndOnTreatment,
-      'TX_ML' => ARTService::Reports::Pepfar::TxMl,
-      'TX_RTT' => ARTService::Reports::Pepfar::TxRTT,
-      'IPT_COVERAGE' => ARTService::Reports::IPTCoverage,
-      'VISITS' => ARTService::Reports::VisitsReport,
-      'VL_DUE' => ARTService::Reports::PatientsDueForViralLoad,
-      'VL_DISAGGREGATED' => ARTService::Reports::ViralLoadDisaggregated,
-      'TB_PREV' => ARTService::Reports::Pepfar::TbPrev,
-      'OUTCOME_LIST' => ARTService::Reports::OutcomeList,
-      'VIRAL_LOAD' => ARTService::Reports::ViralLoad
+      'APPOINTMENTS' => ArtService::Reports::AppointmentsReport,
+      'ARV_REFILL_PERIODS' => ArtService::Reports::ArvRefillPeriods,
+      'COHORT' => ArtService::Reports::Cohort,
+      'COHORT_DISAGGREGATED' => ArtService::Reports::CohortDisaggregated,
+      'COHORT_DISAGGREGATED_ADDITIONS' => ArtService::Reports::CohortDisaggregatedAdditions,
+      'COHORT_SURVIVAL_ANALYSIS' => ArtService::Reports::CohortSurvivalAnalysis,
+      'DRUG_DISPENSATIONS' => ArtService::Reports::DrugDispensations,
+      'IPT' => ArtService::Reports::IPTReport,
+      'PATIENTS_WITH_OUTDATED_DEMOGRAPHICS' => ArtService::Reports::PatientsWithOutdatedDemographics,
+      'PATIENTS_ON_DTG' => ArtService::Reports::PatientsOnDTG,
+      'PREGNANT_PATIENTS' => ArtService::Reports::PregnantPatients,
+      'REGIMENS_AND_FORMULATIONS' => ArtService::Reports::RegimensAndFormulations,
+      'REGIMENS_BY_WEIGHT_AND_GENDER' => ArtService::Reports::RegimensByWeightAndGender,
+      'REGIMEN_SWITCH' => ArtService::Reports::RegimenSwitch,
+      'RETENTION' => ArtService::Reports::Retention,
+      'TB_PREV2' => ArtService::Reports::Pepfar::TbPrev2,
+      'TPT_NEWLY_INITIATED' => ArtService::Reports::TptNewlyInitiated,
+      'TX_CURR' => ArtService::Reports::PatientsAliveAndOnTreatment,
+      'TX_ML' => ArtService::Reports::Pepfar::TxMl,
+      'TX_RTT' => ArtService::Reports::Pepfar::TxRTT,
+      'IPT_COVERAGE' => ArtService::Reports::IPTCoverage,
+      'VISITS' => ArtService::Reports::VisitsReport,
+      'VL_DUE' => ArtService::Reports::PatientsDueForViralLoad,
+      'VL_DISAGGREGATED' => ArtService::Reports::ViralLoadDisaggregated,
+      'TB_PREV' => ArtService::Reports::Pepfar::TbPrev,
+      'OUTCOME_LIST' => ArtService::Reports::OutcomeList,
+      'VIRAL_LOAD' => ArtService::Reports::ViralLoad
     }.freeze
 
     def generate_report(type:, **kwargs)

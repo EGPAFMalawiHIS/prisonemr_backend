@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
   module Reports
-    Constants = ARTService::Constants
+    Constants = ArtService::Constants
 
     # Reports on all patients that were on treatment in given time period
     # regardless of whether they have a terminal state or not within the
