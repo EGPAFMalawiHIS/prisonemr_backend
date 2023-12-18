@@ -16,20 +16,20 @@ module Api
 
       def addAddress(name, address_type, parent_location)
         if address_type == 'TA'
-          ActiveRecord::Base.connection.execute <<EOF
-      INSERT INTO traditional_authority
-      (name, district_id, creator, date_created)
-      VALUES("#{name}", #{parent_location},#{' '}
-      #{User.current.id},'#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}');
-EOF
+          ActiveRecord::Base.connection.execute <<~SQL
+            INSERT INTO traditional_authority
+            (name, district_id, creator, date_created)
+            VALUES("#{name}", #{parent_location},
+            #{User.current.id},'#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}');
+          SQL
 
         elsif address_type == 'Village'
-          ActiveRecord::Base.connection.execute <<EOF
-      INSERT INTO village
-      (name, traditional_authority_id, creator, date_created)
-      VALUES("#{name}", #{parent_location},#{' '}
-      #{User.current.id},'#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}');
-EOF
+          ActiveRecord::Base.connection.execute <<~SQL
+            INSERT INTO village
+            (name, traditional_authority_id, creator, date_created)
+            VALUES("#{name}", #{parent_location},
+            #{User.current.id},'#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}');
+          SQL
 
         end
       end
