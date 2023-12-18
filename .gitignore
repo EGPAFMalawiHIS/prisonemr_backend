@@ -38,3 +38,6 @@ Gemfile.lock
 
 # ignore all yml files
 *.yml
+
+# ignore all files in tmp
+/tmp/*
