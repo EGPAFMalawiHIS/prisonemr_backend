@@ -19,14 +19,14 @@ class ApplicationController < ActionController::API
     authentication_token = request.headers['Authorization']
     unless authentication_token
       errors = ['Authorization token required']
-      render json: { errors: errors }, status: :unauthorized
+      render json: { errors: }, status: :unauthorized
       return false
     end
 
     user = UserService.authenticate authentication_token
     unless user
       errors = ['Invalid or expired authentication token']
-      render json: { errors: errors }, status: :unauthorized
+      render json: { errors: }, status: :unauthorized
       return false
     end
 
@@ -64,7 +64,7 @@ class ApplicationController < ActionController::API
 
   # Takes search filters and converts them to an expression containing
   # inexact glob matchers that can be passed to `where` expressins.
-  def make_inexact_filters(filters, fields=nil)
+  def make_inexact_filters(filters, fields = nil)
     fields ||= filters.keys
 
     inexact_filters = filters.to_hash.each_with_object([[], []]) do |kv_pair, inexact_filters|

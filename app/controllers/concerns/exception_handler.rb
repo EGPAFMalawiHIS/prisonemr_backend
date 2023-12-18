@@ -23,7 +23,7 @@ module ExceptionHandler
       log_exception(e)
       errors = [e.message]
       errors << e.model_errors if e.model_errors
-      render json: { errors: errors }, status: :bad_request
+      render json: { errors: }, status: :bad_request
     end
 
     rescue_from UnprocessableEntityError do |e|
@@ -33,9 +33,7 @@ module ExceptionHandler
     rescue_from RestClient::Exception, Errno::ECONNREFUSED do |e|
       log_exception(e)
 
-      if e.respond_to?(:response)
-        Rails.logger.error("\n\n\033[1mExternal service response:\033[0m\n#{e.response.body}")
-      end
+      Rails.logger.error("\n\n\033[1mExternal service response:\033[0m\n#{e.response.body}") if e.respond_to?(:response)
 
       render json: { errors: ["Failed to communicate with external service: #{e.message}"] },
              status: :bad_gateway
