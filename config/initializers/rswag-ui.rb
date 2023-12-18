@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rswag/ui'
 
 Rswag::Ui.configure do |c|
-
   # List the Swagger endpoints that you want to be documented through the swagger-ui
   # The first parameter is the path (absolute or relative to the UI host) to the corresponding
   # endpoint and the second is a title that will be displayed in the document selector
@@ -9,7 +10,7 @@ Rswag::Ui.configure do |c|
   # then the list below should correspond to the relative paths for those endpoints
 
   c.swagger_endpoint '/api-docs/v1/swagger.yaml', 'API Core v1 docs'
-  c.swagger_endpoint '/api-docs/lab/v1/swagger.yaml', 'Lab API v1 docs'
+  # c.swagger_endpoint '/api-docs/lab/v1/swagger.yaml', 'Lab API v1 docs'
 
   # Add Basic Auth in case your API is private
   # c.basic_auth_enabled = true
