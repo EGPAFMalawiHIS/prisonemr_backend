@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ANCService
+module AncService
   class DataCleaning
     FIRST_VISIT_ENC = ['VITALS', 'APPOINTMENT', 'ART_FOLLOWUP',
                        'TREATMENT', 'MEDICAL HISTORY', 'LAB RESULTS', 'UPDATE OUTCOME',

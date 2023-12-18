@@ -7,7 +7,7 @@ class WorkflowService
     'HIV PROGRAM' => ARTService::WorkflowEngine,
     'OPD PROGRAM' => OPDService::WorkflowEngine,
     'TB PROGRAM' => TBService::WorkflowEngine,
-    'ANC PROGRAM' => ANCService::WorkflowEngine,
+    'ANC PROGRAM' => AncService::WorkflowEngine,
     'OPD PROGRAM' => OPDService::WorkflowEngine,
     'VMMC PROGRAM' => VMMCService::WorkflowEngine,
     'CXCA PROGRAM' => CXCAService::WorkflowEngine

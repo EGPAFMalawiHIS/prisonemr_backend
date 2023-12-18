@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ANCService
+module AncService
   module Reports
     class CohortBuilder
       COHORT_LENGTH = 6.months
