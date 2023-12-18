@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# UnprocessableEntityError
 class UnprocessableEntityError < ApplicationError
   attr_reader :entity
 
