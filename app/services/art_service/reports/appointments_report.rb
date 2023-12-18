@@ -1,7 +1,7 @@
 
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
   module Reports
 
     encounter_names = [

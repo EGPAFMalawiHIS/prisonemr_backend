@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ARTService::Reports::Cohort::Outcomes
+module ArtService::Reports::Cohort::Outcomes
   def self.update_cummulative_outcomes(end_date)
     initialize_table
 

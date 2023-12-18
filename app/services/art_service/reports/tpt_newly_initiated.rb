@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
   module Reports
     ##
     # Patients newly initiated on TPT disaggregated by regimen type and age group.

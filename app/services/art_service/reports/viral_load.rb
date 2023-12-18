@@ -1,5 +1,5 @@
 
-class ARTService::Reports::ViralLoad
+class ArtService::Reports::ViralLoad
   include ModelUtils
 
   def initialize(start_date:, end_date:)

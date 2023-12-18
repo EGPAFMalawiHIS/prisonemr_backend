@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
   module Reports
     class CohortDisaggregated
       def initialize(name:, type:, start_date:, end_date:, rebuild:)
@@ -68,7 +68,7 @@ module ARTService
 
           if @rebuild && quarter  == 'Custom'
             initialize_disaggregated
-            art_service = ARTService::Reports::CohortBuilder.new()
+            art_service = ArtService::Reports::CohortBuilder.new()
             art_service.create_tmp_patient_table
             art_service.load_data_into_temp_earliest_start_date(end_date)
             art_service.update_cum_outcome(end_date)

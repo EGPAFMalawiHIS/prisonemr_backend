@@ -2,7 +2,7 @@
 
 ##
 # TB Preventive Therapy indicators for ART cohort
-module ARTService::Reports::Cohort::Tpt
+module ArtService::Reports::Cohort::Tpt
   ##
   # Patients (re-)initiated on 3HP in current reporting period.
   #

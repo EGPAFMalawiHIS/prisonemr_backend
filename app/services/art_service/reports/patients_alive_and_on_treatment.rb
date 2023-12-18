@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
   module Reports
-    Constants = ARTService::Constants
+    Constants = ArtService::Constants
 
     # Returns all patients alive and on treatment within a given
     # time period (Tx Curr).

@@ -2,7 +2,7 @@
 
 require 'set'
 
-module ARTService
+module ArtService
   module Reports
     # Cohort report builder class.
     #

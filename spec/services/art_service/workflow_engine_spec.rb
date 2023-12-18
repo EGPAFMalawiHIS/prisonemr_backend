@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe ARTService::WorkflowEngine do
+describe ArtService::WorkflowEngine do
   ACTIVITIES = 'ART adherence, Drug Dispensations, HIV clinic consultations,
                 HIV first visits, HIV reception visits, HIV staging visits,
                 Manage Appointments, Prescriptions, Vitals'
@@ -16,7 +16,7 @@ describe ARTService::WorkflowEngine do
     UserProperty.create(user: User.current, property: 'Activities',
                         property_value: ACTIVITIES)
 
-    ARTService::WorkflowEngine.new program: art_program,
+    ArtService::WorkflowEngine.new program: art_program,
                                    patient: patient,
                                    date: epoch
   end
@@ -25,7 +25,7 @@ describe ARTService::WorkflowEngine do
     # Initialise an engine without any user activities
     user_property('Activities')&.delete
 
-    ARTService::WorkflowEngine.new program: art_program,
+    ArtService::WorkflowEngine.new program: art_program,
                                    patient: patient,
                                    date: epoch
   end

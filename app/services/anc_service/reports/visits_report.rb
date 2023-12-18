@@ -116,7 +116,7 @@ module AncService
       end
 
       def workflow_engine(patient, date)
-        ARTService::WorkflowEngine.new patient:,
+        ArtService::WorkflowEngine.new patient:,
                                        program: hiv_program,
                                        date:
       end

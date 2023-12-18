@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ARTService
+module ArtService
 class VLReminder
   include ModelUtils
 
@@ -78,7 +78,7 @@ class VLReminder
   private
 
   def get_earliest_start_date
-    patient_eng = ARTService::PatientsEngine.new(program: @program)
+    patient_eng = ArtService::PatientsEngine.new(program: @program)
     date_enrolled = patient_eng.find_patient_date_enrolled(@patient)
     earliest_start_date = patient_eng.find_patient_earliest_start_date(@patient, date_enrolled)
     return earliest_start_date

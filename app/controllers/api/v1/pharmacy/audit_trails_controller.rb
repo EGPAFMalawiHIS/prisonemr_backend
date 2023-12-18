@@ -18,7 +18,7 @@ module Api
         private
 
         def audit_trail(**kwargs)
-          ARTService::Pharmacy::AuditTrail.retrieve(**kwargs)
+          ArtService::Pharmacy::AuditTrail.retrieve(**kwargs)
         end
       end
     end

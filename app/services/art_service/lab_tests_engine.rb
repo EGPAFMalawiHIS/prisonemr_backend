@@ -4,7 +4,7 @@ require_relative '../nlims'
 
 require 'auto12epl'
 
-module ARTService
+module ArtService
   class LabTestsEngine
     include ModelUtils
 
