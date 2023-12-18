@@ -3,7 +3,7 @@
 require 'logger'
 require 'restclient'
 
-class DDEClient
+class DdeClient
   def initialize
     @auto_login = true # If logged out, automatically login on next request
     @base_url = nil
