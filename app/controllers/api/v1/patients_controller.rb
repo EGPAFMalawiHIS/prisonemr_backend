@@ -331,7 +331,7 @@ module Api
 
       def lab_tests_engine
         program = Program.find_by(name: 'TB PROGRAM')
-        TBService::LabTestsEngine.new program:
+        TbService::LabTestsEngine.new program:
       end
     end
   end
