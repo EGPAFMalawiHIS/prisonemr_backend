@@ -2,13 +2,13 @@
 
 module ArtService
   module Reports
-    Constants = ArtService::Constants
 
     # Reports on all patients that were on treatment in given time period
     # regardless of whether they have a terminal state or not within the
     # period.
     class PatientsOnTreatment
       attr_reader :start_date, :end_date
+      include ArtService::Constants
 
       def initialize(start_date:, end_date:)
         @start_date = start_date
