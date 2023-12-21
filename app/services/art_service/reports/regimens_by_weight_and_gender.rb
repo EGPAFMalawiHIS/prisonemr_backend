@@ -2,10 +2,10 @@
 
 module ArtService
   module Reports
-    Constants = ArtService::Constants
-
     class RegimensByWeightAndGender
       attr_reader :start_date, :end_date
+
+      include ArtService::Constants
 
       def initialize(start_date:, end_date:, **_kwargs)
         @start_date = start_date
