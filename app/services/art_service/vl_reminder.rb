@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ArtService
-class VLReminder
+class VlReminder
   include ModelUtils
 
   def initialize(patient_id:, date: Date.today)
