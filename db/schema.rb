@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
   create_table "active_list", primary_key: "active_list_id", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
     t.integer "person_id", null: false
@@ -62,7 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.index ["retired_by"], name: "user_who_retired_active_list_type"
   end
 
-  create_table "alternative_drug_names", charset: "latin1", force: :cascade do |t|
+  create_table "alternative_drug_names", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "short_name"
     t.integer "drug_inventory_id", null: false
@@ -377,6 +377,16 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.index ["word"], name: "word_in_concept_name"
   end
 
+  create_table "data_cleaning_supervisions", primary_key: "data_cleaning_tool_id", charset: "latin1", force: :cascade do |t|
+    t.datetime "data_cleaning_datetime", precision: nil, null: false
+    t.string "supervisors", null: false
+    t.integer "creator", null: false
+    t.boolean "voided", default: false, null: false
+    t.integer "voided_by"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+  end
+
   create_table "district", primary_key: "district_id", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "region_id", default: 0, null: false
@@ -422,7 +432,8 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.index ["uuid"], name: "drug_uuid_index", unique: true
   end
 
-  create_table "drug_cms", primary_key: "drug_inventory_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "drug_cms", charset: "latin1", force: :cascade do |t|
+    t.integer "drug_inventory_id", null: false
     t.string "name", null: false
     t.string "code"
     t.string "short_name", limit: 225
@@ -458,6 +469,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.integer "prn", limit: 2, default: 0, null: false
     t.integer "complex", limit: 2, default: 0, null: false
     t.integer "quantity"
+    t.index ["drug_inventory_id", "quantity"], name: "inventory_item_and_order_quantity"
     t.index ["drug_inventory_id"], name: "inventory_item"
   end
 
@@ -773,6 +785,22 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.index ["form_id"], name: "Form with which this htmlform is related"
   end
 
+  create_table "internal_sections", charset: "latin1", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "creator", null: false
+    t.datetime "date_created", precision: nil, null: false
+    t.integer "changed_by"
+    t.datetime "date_changed", precision: nil
+    t.boolean "voided", default: false, null: false
+    t.integer "voided_by"
+    t.datetime "date_voided", precision: nil
+    t.string "void_reason"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["creator"], name: "fk_rails_564f0c6e7f"
+    t.index ["voided_by"], name: "fk_rails_b4dec3bd71"
+  end
+
   create_table "lab_accession_number_counters", charset: "latin1", force: :cascade do |t|
     t.date "date"
     t.bigint "value"
@@ -801,7 +829,8 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.datetime "pulled_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "revision", null: false
+    t.string "revision", limit: 256
+    t.boolean "result_push_status", default: false
     t.index ["lims_id"], name: "index_lab_lims_order_mappings_on_lims_id"
     t.index ["order_id"], name: "fk_rails_0171384638"
   end
@@ -809,6 +838,20 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
   create_table "labs", id: :integer, charset: "latin1", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "lims_acknowledgement_statuses", primary_key: "order_id", id: :integer, charset: "latin1", force: :cascade do |t|
+    t.integer "test", null: false
+    t.datetime "date_received", precision: nil, null: false
+    t.datetime "date_pushed", precision: nil
+    t.string "acknowledgement_type", null: false
+    t.boolean "pushed", default: false, null: false
+    t.boolean "voided", default: false
+    t.integer "voided_by"
+    t.datetime "date_voided", precision: nil
+    t.string "void_reason"
+    t.index ["test"], name: "fk_rails_c856923164"
+    t.index ["voided_by"], name: "fk_rails_331e1d9232"
   end
 
   create_table "liquibasechangelog", primary_key: ["ID", "AUTHOR", "FILENAME"], charset: "latin1", force: :cascade do |t|
@@ -950,6 +993,25 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.index ["token_registration_id"], name: "token_registration_tag"
   end
 
+  create_table "merge_audits", charset: "latin1", force: :cascade do |t|
+    t.integer "primary_id", null: false
+    t.integer "secondary_id", null: false
+    t.string "merge_type", null: false
+    t.bigint "secondary_previous_merge_id"
+    t.integer "creator", null: false
+    t.boolean "voided", default: false, null: false
+    t.integer "voided_by"
+    t.datetime "date_voided", precision: nil
+    t.string "void_reason"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["creator"], name: "fk_rails_d1dc00d9b1"
+    t.index ["primary_id"], name: "fk_rails_76fdfcb4ed"
+    t.index ["secondary_id"], name: "fk_rails_afc7a0f240"
+    t.index ["secondary_previous_merge_id"], name: "fk_rails_d71d6f2933"
+    t.index ["voided_by"], name: "fk_rails_83cf4bb331"
+  end
+
   create_table "merged_patients", primary_key: "patient_id", id: :integer, default: nil, charset: "utf8mb3", force: :cascade do |t|
     t.integer "merged_to_id", null: false
   end
@@ -968,13 +1030,13 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.string "category", limit: 1, null: false
   end
 
-  create_table "moh_regimen_combination", primary_key: "regimen_combination_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "moh_regimen_combination", primary_key: "regimen_combination_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "regimen_name_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "moh_regimen_combination_drug", primary_key: "regimen_combination_drug_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "moh_regimen_combination_drug", primary_key: "regimen_combination_drug_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "regimen_combination_id", null: false
     t.integer "drug_id", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -1046,7 +1108,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.integer "voided_by"
   end
 
-  create_table "moh_regimen_name", primary_key: "regimen_name_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "moh_regimen_name", primary_key: "regimen_name_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -1099,7 +1161,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
   end
 
   create_table "notification_alert", primary_key: "alert_id", id: :integer, charset: "utf8mb3", force: :cascade do |t|
-    t.string "text", limit: 512, null: false
+    t.text "text", null: false
     t.integer "satisfied_by_any", default: 0, null: false
     t.integer "alert_read", default: 0, null: false
     t.datetime "date_to_expire", precision: nil
@@ -1119,6 +1181,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.integer "alert_read", default: 0, null: false
     t.timestamp "date_changed", default: -> { "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }
     t.string "uuid", limit: 38, null: false
+    t.boolean "cleared", default: false
     t.index ["alert_id"], name: "id_of_alert"
     t.index ["user_id"], name: "alert_read_by_user"
   end
@@ -1237,6 +1300,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
     t.index ["creator"], name: "type_created_by"
+    t.index ["name"], name: "index_order_type_on_name"
     t.index ["retired"], name: "retired_status"
     t.index ["retired_by"], name: "user_who_retired_order_type"
     t.index ["uuid"], name: "order_type_uuid_index", unique: true
@@ -1270,10 +1334,12 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.index ["discontinued_reason"], name: "discontinued_because"
     t.index ["encounter_id"], name: "orders_in_encounter"
     t.index ["obs_id"], name: "obs_for_order"
+    t.index ["order_type_id", "auto_expire_date"], name: "idx_order_expiry"
+    t.index ["order_type_id", "concept_id", "patient_id", "start_date"], name: "idx_order"
     t.index ["order_type_id"], name: "type_of_order"
     t.index ["orderer"], name: "orderer_not_drug"
+    t.index ["patient_id", "order_id"], name: "order_id_patient_id_temp"
     t.index ["patient_id"], name: "order_for_patient"
-    t.index ["start_date", "patient_id", "concept_id", "order_type_id"], name: "idx_order"
     t.index ["uuid"], name: "orders_uuid_index", unique: true
     t.index ["voided_by"], name: "user_who_voided_order"
   end
@@ -1327,10 +1393,12 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.string "uuid", limit: 38, null: false
     t.index ["creator"], name: "identifier_creator"
     t.index ["identifier"], name: "identifier_name"
+    t.index ["identifier_type", "identifier"], name: "index_patient_identifier_on_identifier_type_and_identifier"
     t.index ["identifier_type"], name: "defines_identifier_type"
     t.index ["location_id"], name: "identifier_location"
     t.index ["patient_id"], name: "idx_patient_identifier_patient"
     t.index ["uuid"], name: "patient_identifier_uuid_index", unique: true
+    t.index ["voided", "identifier_type", "identifier"], name: "index_pi_on_voided_and_identifier_type_and_identifier"
     t.index ["voided_by"], name: "identifier_voider"
   end
 
@@ -1633,6 +1701,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.integer "changed_by"
     t.integer "pack_size"
     t.string "barcode"
+    t.string "product_code"
   end
 
   create_table "pharmacy_batches", charset: "latin1", force: :cascade do |t|
@@ -1645,6 +1714,8 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.string "void_reason"
     t.datetime "date_voided", precision: nil
     t.integer "changed_by"
+    t.integer "location_id"
+    t.index ["location_id"], name: "fk_rails_09e680ca40"
   end
 
   create_table "pharmacy_encounter_type", primary_key: "pharmacy_encounter_type_id", id: :integer, charset: "latin1", options: "ENGINE=MyISAM", force: :cascade do |t|
@@ -1676,7 +1747,37 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.integer "dispensation_obs_id"
     t.text "transaction_reason"
     t.date "transaction_date"
+    t.bigint "stock_verification_id"
+    t.integer "obs_group_id"
     t.index ["dispensation_obs_id"], name: "fk_rails_c51641b979"
+    t.index ["obs_group_id"], name: "fk_rails_353402f537"
+    t.index ["stock_verification_id"], name: "index_pharmacy_obs_on_stock_verification_id"
+  end
+
+  create_table "pharmacy_stock_balances", charset: "latin1", force: :cascade do |t|
+    t.bigint "drug_id", null: false
+    t.integer "pack_size", null: false
+    t.float "open_balance", default: 0.0
+    t.float "close_balance", default: 0.0
+    t.date "transaction_date", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["drug_id"], name: "index_pharmacy_stock_balances_on_drug_id"
+  end
+
+  create_table "pharmacy_stock_verifications", charset: "latin1", force: :cascade do |t|
+    t.string "reason"
+    t.datetime "verification_date", precision: nil
+    t.integer "creator"
+    t.datetime "date_created", precision: nil
+    t.integer "changed_by"
+    t.datetime "date_changed", precision: nil
+    t.boolean "voided"
+    t.integer "voided_by"
+    t.string "void_reason"
+    t.datetime "date_voided", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "privilege", primary_key: "privilege", id: { type: :string, limit: 50, default: "" }, charset: "utf8mb3", force: :cascade do |t|
@@ -1781,6 +1882,14 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
     t.index ["creator"], name: "state_creator"
     t.index ["program_workflow_id"], name: "workflow_for_state"
     t.index ["uuid"], name: "program_workflow_state_uuid_index", unique: true
+  end
+
+  create_table "radiology_accession_number_counters", charset: "latin1", force: :cascade do |t|
+    t.date "date"
+    t.bigint "value"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["date"], name: "index_radiology_accession_number_counters_on_date", unique: true
   end
 
   create_table "record_sync_statuses", charset: "latin1", force: :cascade do |t|
@@ -2136,7 +2245,7 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
   create_table "user_property", primary_key: ["user_id", "property"], charset: "utf8mb3", force: :cascade do |t|
     t.integer "user_id", default: 0, null: false
     t.string "property", limit: 100, default: "", null: false
-    t.string "property_value", default: "", null: false
+    t.text "property_value", size: :long
   end
 
   create_table "user_role", primary_key: ["role", "user_id"], charset: "utf8mb3", force: :cascade do |t|
@@ -2384,7 +2493,12 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
   add_foreign_key "htmlformentry_html_form", "form", primary_key: "form_id", name: "Form with which this htmlform is related"
   add_foreign_key "htmlformentry_html_form", "users", column: "changed_by", primary_key: "user_id", name: "User who changed htmlformentry_htmlform"
   add_foreign_key "htmlformentry_html_form", "users", column: "creator", primary_key: "user_id", name: "User who created htmlformentry_htmlform"
+  add_foreign_key "internal_sections", "users", column: "creator", primary_key: "user_id"
+  add_foreign_key "internal_sections", "users", column: "voided_by", primary_key: "user_id"
   add_foreign_key "lab_lims_order_mappings", "orders", primary_key: "order_id"
+  add_foreign_key "lims_acknowledgement_statuses", "concept", column: "test", primary_key: "concept_id"
+  add_foreign_key "lims_acknowledgement_statuses", "orders", primary_key: "order_id"
+  add_foreign_key "lims_acknowledgement_statuses", "users", column: "voided_by", primary_key: "user_id"
   add_foreign_key "location", "location", column: "parent_location", primary_key: "location_id", name: "parent_location"
   add_foreign_key "location", "location_type", primary_key: "location_type_id", name: "location_type"
   add_foreign_key "location", "users", column: "creator", primary_key: "user_id", name: "user_who_created_location"
@@ -2402,6 +2516,11 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
   add_foreign_key "logic_token_registration", "users", column: "changed_by", primary_key: "user_id", name: "token_registration_changed_by"
   add_foreign_key "logic_token_registration", "users", column: "creator", primary_key: "user_id", name: "token_registration_creator"
   add_foreign_key "logic_token_registration_tag", "logic_token_registration", column: "token_registration_id", primary_key: "token_registration_id", name: "token_registration_tag"
+  add_foreign_key "merge_audits", "merge_audits", column: "secondary_previous_merge_id"
+  add_foreign_key "merge_audits", "patient", column: "primary_id", primary_key: "patient_id"
+  add_foreign_key "merge_audits", "patient", column: "secondary_id", primary_key: "patient_id"
+  add_foreign_key "merge_audits", "users", column: "creator", primary_key: "user_id"
+  add_foreign_key "merge_audits", "users", column: "voided_by", primary_key: "user_id"
   add_foreign_key "note", "encounter", primary_key: "encounter_id", name: "encounter_note"
   add_foreign_key "note", "note", column: "parent", primary_key: "note_id", name: "note_hierarchy"
   add_foreign_key "note", "obs", column: "obs_id", primary_key: "obs_id", name: "obs_note"
@@ -2480,7 +2599,10 @@ ActiveRecord::Schema[7.0].define(version: 2021_05_05_072331) do
   add_foreign_key "person_name", "users", column: "creator", primary_key: "user_id", name: "user_who_made_name"
   add_foreign_key "person_name", "users", column: "voided_by", primary_key: "user_id", name: "user_who_voided_name"
   add_foreign_key "person_name_code", "person_name", primary_key: "person_name_id", name: "code for name", on_update: :cascade
+  add_foreign_key "pharmacy_batches", "location", primary_key: "location_id"
   add_foreign_key "pharmacy_obs", "obs", column: "dispensation_obs_id", primary_key: "obs_id"
+  add_foreign_key "pharmacy_obs", "pharmacy_obs", column: "obs_group_id", primary_key: "pharmacy_module_id"
+  add_foreign_key "pharmacy_obs", "pharmacy_stock_verifications", column: "stock_verification_id"
   add_foreign_key "program", "concept", primary_key: "concept_id", name: "program_concept"
   add_foreign_key "program", "users", column: "changed_by", primary_key: "user_id", name: "user_who_changed_program"
   add_foreign_key "program", "users", column: "creator", primary_key: "user_id", name: "program_creator"
