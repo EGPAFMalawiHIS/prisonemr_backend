@@ -26,7 +26,7 @@ gem 'puma', '~> 6.3'
 gem 'passenger'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'bootsnap', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
@@ -40,6 +40,8 @@ gem 'rswag-api'
 gem 'rswag-ui'
 
 gem 'his_emr_api_lab', git: 'https://github.com/EGPAFMalawiHIS/HIS-EMR-API-Lab', branch: 'upgrade/rails-7'
+# We will readd this once the gem is upgraded to rails 7
+# gem 'his_emr_api_radiology', '~> 1.0.9'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
