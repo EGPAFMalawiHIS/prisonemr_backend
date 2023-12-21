@@ -1,22 +1,27 @@
 # Mysql configurations
 default: &default
-  host: localhost
+  host: 127.0.0.1
+  port: 3308
+  username: your_username
+  password: your_super_secret_password
+  encoding: "latin1"
   adapter: mysql2
-  username: pamzey
-  password: password@2021
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 200 } %>
+  checkout_timeout: 10000
+  timeout: 10000
+  variables:
+    sql_mode: STRICT_TRANS_TABLES
 
 development:
   <<: *default
-  database: fpam_openmrs
+  database: prison_dev
 test:
   <<: *default
-  database: openmrs_18test
+  database: prison_test
 
 production:
   <<: *default
-  database: mlambe_api_18
+  database: prison_test
 
 # Uncomment out the following and update them accordingly if
 # you need to sync hts and anc to RDS.
