@@ -129,9 +129,9 @@ module Api
         number = params[:number]
 
         begin
-          number = TBNumberService.assign_tb_number(patient_id, date, number)
+          number = TbNumberService.assign_tb_number(patient_id, date, number)
           render json: number, status: :created
-        rescue TBNumberService::DuplicateIdentifierError
+        rescue TbNumberService::DuplicateIdentifierError
           render status: :conflict
         end
       end
@@ -220,7 +220,7 @@ module Api
       end
 
       def print_tb_number
-        label = TBNumberService.generate_tb_patient_id(params[:patient_id])
+        label = TbNumberService.generate_tb_patient_id(params[:patient_id])
         send_data label, type: 'application/label;charset=utf-8',
                          stream: false,
                          filename: "#{params[:patient_id]}-#{SecureRandom.hex(12)}.lbl",
