@@ -88,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["voided_by"], name: "user_who_voided_cohort"
   end
 
-  create_table "cohort_drill_down", charset: "latin1", force: :cascade do |t|
+  create_table "cohort_drill_down", charset: "utf8mb3", force: :cascade do |t|
     t.integer "reporting_report_design_resource_id", null: false
     t.integer "patient_id", null: false
     t.index ["reporting_report_design_resource_id"], name: "drilldown_report_value"
@@ -377,7 +377,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["word"], name: "word_in_concept_name"
   end
 
-  create_table "data_cleaning_supervisions", primary_key: "data_cleaning_tool_id", charset: "latin1", force: :cascade do |t|
+  create_table "data_cleaning_supervisions", primary_key: "data_cleaning_tool_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "data_cleaning_datetime", precision: nil, null: false
     t.string "supervisors", null: false
     t.integer "creator", null: false
@@ -402,7 +402,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["retired_by"], name: "user_who_retired_district"
   end
 
-  create_table "districts", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "districts", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
@@ -432,7 +432,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["uuid"], name: "drug_uuid_index", unique: true
   end
 
-  create_table "drug_cms", charset: "latin1", force: :cascade do |t|
+  create_table "drug_cms", charset: "utf8mb3", force: :cascade do |t|
     t.integer "drug_inventory_id", null: false
     t.string "name", null: false
     t.string "code"
@@ -455,7 +455,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["concept_id"], name: "combination_drug"
   end
 
-  create_table "drug_ingredients", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "drug_ingredients", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
@@ -473,14 +473,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["drug_inventory_id"], name: "inventory_item"
   end
 
-  create_table "drug_order_barcodes", primary_key: "drug_order_barcode_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "drug_order_barcodes", primary_key: "drug_order_barcode_id", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "drug_id"
     t.integer "tabs"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "drug_set", primary_key: "drug_set_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "drug_set", primary_key: "drug_set_id", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "drug_inventory_id"
     t.integer "set_id"
     t.string "frequency", null: false
@@ -492,7 +492,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.integer "voided_by"
   end
 
-  create_table "dset", primary_key: "set_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "dset", primary_key: "set_id", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.text "name"
     t.text "description"
     t.datetime "date_created", precision: nil
@@ -705,19 +705,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["form_id"], name: "Form with which this xsn is related"
   end
 
-  create_table "general_sets", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "general_sets", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "global_property", primary_key: "property", id: { type: :binary, limit: 255, default: "" }, charset: "utf8mb3", force: :cascade do |t|
+  create_table "global_property", id: :integer, charset: "utf8mb3", force: :cascade do |t|
+    t.string "property", default: "", null: false
     t.text "property_value", size: :medium
     t.text "description"
     t.string "uuid", limit: 38, null: false
     t.index ["uuid"], name: "global_property_uuid_index", unique: true
   end
 
-  create_table "heart_beat", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "heart_beat", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.string "ip", limit: 20
     t.string "property", limit: 200
     t.string "value", limit: 200
@@ -785,7 +786,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["form_id"], name: "Form with which this htmlform is related"
   end
 
-  create_table "internal_sections", charset: "latin1", force: :cascade do |t|
+  create_table "internal_sections", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator", null: false
     t.datetime "date_created", precision: nil, null: false
@@ -801,7 +802,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["voided_by"], name: "fk_rails_b4dec3bd71"
   end
 
-  create_table "lab_accession_number_counters", charset: "latin1", force: :cascade do |t|
+  create_table "lab_accession_number_counters", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date"
     t.bigint "value"
     t.datetime "created_at", precision: nil, null: false
@@ -809,7 +810,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["date"], name: "index_lab_accession_number_counters_on_date", unique: true
   end
 
-  create_table "lab_lims_failed_imports", charset: "latin1", force: :cascade do |t|
+  create_table "lab_lims_failed_imports", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "lims_id", null: false
     t.string "tracking_number", null: false
     t.string "patient_nhid", null: false
@@ -822,7 +823,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["tracking_number"], name: "index_lab_lims_failed_imports_on_tracking_number"
   end
 
-  create_table "lab_lims_order_mappings", charset: "latin1", force: :cascade do |t|
+  create_table "lab_lims_order_mappings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "lims_id", null: false
     t.integer "order_id", null: false
     t.datetime "pushed_at", precision: nil
@@ -835,12 +836,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["order_id"], name: "fk_rails_0171384638"
   end
 
-  create_table "labs", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "labs", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "lims_acknowledgement_statuses", primary_key: "order_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "lims_acknowledgement_statuses", primary_key: "order_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "test", null: false
     t.datetime "date_received", precision: nil, null: false
     t.datetime "date_pushed", precision: nil
@@ -884,7 +885,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.string "latitude", limit: 50
     t.string "longitude", limit: 50
     t.integer "creator", default: 0, null: false
-    t.timestamp "date_created", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "date_created", precision: nil, null: false
     t.string "county_district", limit: 50
     t.string "neighborhood_cell", limit: 50
     t.string "region", limit: 50
@@ -907,7 +908,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
   end
 
   create_table "location_tag", primary_key: "location_tag_id", id: :integer, charset: "latin1", force: :cascade do |t|
-    t.string "name", limit: 50
+    t.string "tag", limit: 50
     t.string "description"
     t.integer "creator", null: false
     t.datetime "date_created", precision: nil, null: false
@@ -927,7 +928,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["location_tag_id"], name: "location_tag_map_tag"
   end
 
-  create_table "location_tag_maps", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "location_tag_maps", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
@@ -993,7 +994,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["token_registration_id"], name: "token_registration_tag"
   end
 
-  create_table "merge_audits", charset: "latin1", force: :cascade do |t|
+  create_table "merge_audits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "primary_id", null: false
     t.integer "secondary_id", null: false
     t.string "merge_type", null: false
@@ -1114,6 +1115,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
+  create_table "moh_regimen_names", primary_key: "regimen_name_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+  end
+
   create_table "moh_regimens", primary_key: "regimen_id", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "regimen_index", null: false
     t.text "description"
@@ -1133,7 +1140,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.text "issued_to"
   end
 
-  create_table "national_ids", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "national_ids", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
@@ -1197,7 +1204,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["uuid"], name: "notification_template_uuid_index", unique: true
   end
 
-  create_table "notification_tracker", primary_key: "tracker_id", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "notification_tracker", primary_key: "tracker_id", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.string "notification_name", null: false
     t.text "description"
     t.string "notification_response", null: false
@@ -1206,7 +1213,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.integer "user_id", null: false
   end
 
-  create_table "notification_tracker_user_activities", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "notification_tracker_user_activities", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "user_id", null: false
     t.datetime "login_datetime", precision: nil, null: false
     t.text "selected_activities"
@@ -1344,7 +1351,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["voided_by"], name: "user_who_voided_order"
   end
 
-  create_table "outpatients", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "outpatients", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
@@ -1365,7 +1372,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["voided_by"], name: "user_who_voided_patient"
   end
 
-  create_table "patient_defaulted_dates", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "patient_defaulted_dates", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "patient_id"
     t.integer "order_id"
     t.integer "drug_id"
@@ -1375,7 +1382,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.date "start_date"
     t.date "end_date"
     t.date "defaulted_date"
-    t.date "date_created", default: "2023-12-18"
+    t.date "date_created", default: "2020-06-10"
   end
 
   create_table "patient_identifier", primary_key: "patient_identifier_id", id: :integer, charset: "utf8mb3", force: :cascade do |t|
@@ -1564,7 +1571,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.string "township_division", limit: 50
     t.string "uuid", limit: 38, null: false
     t.index ["creator"], name: "patient_address_creator"
-    t.index ["date_created"], name: "index_date_created_on_person_address", order: :desc
+    t.index ["date_created"], name: "index_date_created_on_person_address"
     t.index ["person_id"], name: "patient_addresses"
     t.index ["uuid"], name: "person_address_uuid_index", unique: true
     t.index ["voided_by"], name: "patient_address_void"
@@ -1662,12 +1669,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["person_name_id"], name: "name_for_patient"
   end
 
-  create_table "pharmacies", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "pharmacies", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "pharmacy_batch_item_reallocations", charset: "latin1", force: :cascade do |t|
+  create_table "pharmacy_batch_item_reallocations", charset: "utf8mb3", force: :cascade do |t|
     t.string "reallocation_code"
     t.integer "batch_item_id"
     t.float "quantity"
@@ -1684,7 +1691,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["reallocation_type"], name: "index_pharmacy_batch_item_reallocations_on_reallocation_type"
   end
 
-  create_table "pharmacy_batch_items", charset: "latin1", force: :cascade do |t|
+  create_table "pharmacy_batch_items", charset: "utf8mb3", force: :cascade do |t|
     t.integer "pharmacy_batch_id"
     t.integer "drug_id"
     t.float "delivered_quantity"
@@ -1704,7 +1711,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.string "product_code"
   end
 
-  create_table "pharmacy_batches", charset: "latin1", force: :cascade do |t|
+  create_table "pharmacy_batches", charset: "utf8mb3", force: :cascade do |t|
     t.string "batch_number"
     t.integer "creator", null: false
     t.datetime "date_created", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -1754,7 +1761,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["stock_verification_id"], name: "index_pharmacy_obs_on_stock_verification_id"
   end
 
-  create_table "pharmacy_stock_balances", charset: "latin1", force: :cascade do |t|
+  create_table "pharmacy_stock_balances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "drug_id", null: false
     t.integer "pack_size", null: false
     t.float "open_balance", default: 0.0
@@ -1765,7 +1772,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["drug_id"], name: "index_pharmacy_stock_balances_on_drug_id"
   end
 
-  create_table "pharmacy_stock_verifications", charset: "latin1", force: :cascade do |t|
+  create_table "pharmacy_stock_verifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "reason"
     t.datetime "verification_date", precision: nil
     t.integer "creator"
@@ -1884,7 +1891,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["uuid"], name: "program_workflow_state_uuid_index", unique: true
   end
 
-  create_table "radiology_accession_number_counters", charset: "latin1", force: :cascade do |t|
+  create_table "radiology_accession_number_counters", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date"
     t.bigint "value"
     t.datetime "created_at", precision: nil, null: false
@@ -1892,7 +1899,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["date"], name: "index_radiology_accession_number_counters_on_date", unique: true
   end
 
-  create_table "record_sync_statuses", charset: "latin1", force: :cascade do |t|
+  create_table "record_sync_statuses", charset: "utf8mb3", force: :cascade do |t|
     t.integer "record_type_id", null: false
     t.integer "record_id", null: false
     t.string "record_doc_id", null: false
@@ -1905,7 +1912,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["record_type_id"], name: "idx_record_type_id"
   end
 
-  create_table "record_types", charset: "latin1", force: :cascade do |t|
+  create_table "record_types", charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -1963,7 +1970,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["retired_by"], name: "user_who_retired_region"
   end
 
-  create_table "regions", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "regions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
@@ -2137,7 +2144,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.integer "version"
   end
 
-  create_table "send_results_to_couchdbs", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "send_results_to_couchdbs", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
@@ -2206,7 +2213,58 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["voided_by"], name: "user_who_voided_task"
   end
 
-  create_table "traditional_authorities", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "temp_disaggregated", primary_key: "patient_id", id: :integer, default: nil, charset: "utf8mb3", force: :cascade do |t|
+    t.string "age_group", limit: 20
+    t.string "maternal_status", limit: 10
+    t.integer "given_ipt"
+    t.integer "screened_for_tb"
+  end
+
+  create_table "temp_earliest_start_date", primary_key: "patient_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.date "date_enrolled"
+    t.date "earliest_start_date"
+    t.date "birthdate"
+    t.boolean "birthdate_estimated"
+    t.date "death_date"
+    t.string "gender", limit: 32
+    t.integer "age_at_initiation"
+    t.integer "age_in_days"
+    t.integer "reason_for_starting_art"
+    t.index ["date_enrolled"], name: "date_enrolled_index"
+    t.index ["earliest_start_date"], name: "earliest_start_date_index"
+    t.index ["patient_id", "date_enrolled"], name: "patient_id__date_enrolled_index"
+    t.index ["patient_id", "earliest_start_date", "date_enrolled", "gender"], name: "earliest_start_date__date_enrolled_index"
+    t.index ["patient_id"], name: "patient_id_index"
+    t.index ["reason_for_starting_art"], name: "idx_reason_for_art"
+  end
+
+  create_table "temp_patient_outcomes", primary_key: "patient_id", id: :integer, default: nil, charset: "utf8mb3", force: :cascade do |t|
+    t.string "cum_outcome", limit: 120, null: false
+    t.date "outcome_date"
+    t.index ["patient_id", "cum_outcome", "outcome_date"], name: "idx_outcomes"
+  end
+
+  create_table "temp_patient_side_effects", primary_key: "patient_id", id: :integer, default: nil, charset: "utf8mb3", force: :cascade do |t|
+    t.string "has_se", limit: 120, null: false
+    t.index ["patient_id", "has_se"], name: "idx_side_effects"
+  end
+
+  create_table "temp_patient_tb_status", primary_key: "patient_id", id: :integer, default: nil, charset: "utf8mb3", force: :cascade do |t|
+    t.integer "tb_status"
+    t.index ["patient_id", "tb_status"], name: "patient_id_tb_status_index"
+    t.index ["patient_id"], name: "patient_id_index"
+    t.index ["tb_status"], name: "tb_status_index"
+  end
+
+  create_table "temp_pepfar_patient_outcomes", id: false, charset: "utf8mb3", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.string "cum_outcome", limit: 25
+    t.index ["cum_outcome"], name: "cum_outcome_index"
+    t.index ["patient_id", "cum_outcome"], name: "patient_id_cum_outcome_index"
+    t.index ["patient_id"], name: "patient_id_index"
+  end
+
+  create_table "traditional_authorities", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
@@ -2231,7 +2289,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.string "name", limit: 50, default: "", null: false
   end
 
-  create_table "user_programs", charset: "latin1", force: :cascade do |t|
+  create_table "user_programs", charset: "utf8mb3", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "program_id"
     t.integer "voided", default: 0
@@ -2280,7 +2338,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["retired_by"], name: "user_who_retired_this_user"
   end
 
-  create_table "uuid_remaps", charset: "latin1", force: :cascade do |t|
+  create_table "uuid_remaps", charset: "utf8mb3", force: :cascade do |t|
     t.string "old_uuid"
     t.string "new_uuid"
     t.string "database"
@@ -2295,7 +2353,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["old_uuid"], name: "index_uuid_remaps_on_old_uuid"
   end
 
-  create_table "validation_results", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "validation_results", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "rule_id"
     t.integer "failures"
     t.date "date_checked"
@@ -2303,7 +2361,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "validation_rules", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "validation_rules", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.string "expr"
     t.text "desc"
     t.integer "type_id"
@@ -2326,7 +2384,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.index ["traditional_authority_id"], name: "ta_for_village"
   end
 
-  create_table "villages", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "villages", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
