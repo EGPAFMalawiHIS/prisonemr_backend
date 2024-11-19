@@ -5,7 +5,7 @@ class MysqlDumpJob < ApplicationJob
     facility = GlobalProperty.find_by(property: "current_health_center_name")&.property_value
     raise "Facility name not found!" if facility.blank?
 
-    backup_dir = "/home/ubuntu/backups"
+    backup_dir = "/opt/prison/backups"
     filename = "#{facility}-#{Time.now.strftime('%Y-%m-%d')}.sql.gz"
     filepath = "#{backup_dir}/#{filename}"
 
