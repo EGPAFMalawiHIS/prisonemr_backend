@@ -23,8 +23,3 @@
 every 5.minutes do
   runner 'bin/lab/sync_worker.rb', environment: 'development'
 end
-
-#Runs this everyday at to generate a dump
-every 1.day, at: '10:00 am' do
-  runner "MysqlDumpJob.perform_later", environment: 'development'
-end
