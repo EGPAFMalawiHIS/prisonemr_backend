@@ -2,11 +2,12 @@
 
 class ReportService
   ENGINES = {
-    'HIV PROGRAM' => ArtService::ReportEngine,
+    'HIV PROGRAM' => PrisonService::ReportEngine,
+    'HIV PROGRAMS' => ArtService::ReportEngine,
     'ANC PROGRAM' => AncService::ReportEngine,
     'OPD PROGRAM' => OpdService::ReportEngine,
     'VMMC PROGRAM' => VmmcService::ReportEngine,
-    'TB PROGRAM' => TbService::ReportEngine
+    'TB PROGRAM' => TbService::ReportEngine,
   }.freeze
   LOGGER = Rails.logger
 
@@ -58,6 +59,10 @@ class ReportService
     return unless path.exist?
 
     File.unlink(path)
+  end
+
+  def prison_reports(start_date, end_date, report_name, **kwargs)
+    engine(@program).reports(start_date.to_date, end_date.to_date, report_name, **kwargs)
   end
 
   def dashboard_stats(date)

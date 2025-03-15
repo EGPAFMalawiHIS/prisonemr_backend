@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
+ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
   create_table "active_list", primary_key: "active_list_id", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
     t.integer "person_id", null: false
@@ -1264,6 +1264,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_31_090722) do
     t.string "void_reason"
     t.string "value_complex"
     t.string "uuid", limit: 38, null: false
+    t.integer "changed_by"
+    t.datetime "date_changed"
     t.index ["concept_id"], name: "obs_concept"
     t.index ["creator"], name: "obs_enterer"
     t.index ["encounter_id"], name: "encounter_observations"

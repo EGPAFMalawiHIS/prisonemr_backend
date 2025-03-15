@@ -6,7 +6,6 @@ module ObservationService
       ActiveRecord::Base.transaction do
         Rails.logger.debug("Creating observation: #{obs_parameters}")
         child_obs_parameters = obs_parameters.delete(:child)
-
         validate_presence_of_obs_value(obs_parameters)
 
         obs_parameters[:obs_datetime] = (
@@ -14,16 +13,19 @@ module ObservationService
         )
         obs_parameters[:person_id] = encounter.patient_id
         obs_parameters[:encounter_id] = encounter.id
+        obs_parameters[:changed_by] = encounter.creator || 1 # Fallback to system user ID
+        obs_parameters[:date_changed] = Time.now
+
         observation = Observation.create(obs_parameters)
         validate_observation(observation)
 
-        return [observation, nil] unless child_obs_parameters
-
-        Rails.logger.debug("Creating child observation for obs ##{observation.obs_id}")
-        child_obs_parameters[:obs_group_id] = observation.obs_id
-        child_observation = create_observation(encounter, child_obs_parameters)
-
-        [observation, child_observation]
+        if child_obs_parameters
+          Rails.logger.debug("Creating child observation for obs ##{observation.obs_id}")
+          child_obs_parameters[:obs_group_id] = observation.obs_id
+          create_observation(encounter, child_obs_parameters)
+        end
+    
+        observation
       end
     end
 
@@ -51,11 +53,12 @@ module ObservationService
     # Raises an InvalidParameterError if the errors object of the observation
     # contains errors
     def validate_observation(observation)
+      Rails.logger.error("Observation errors: #{observation.errors.full_messages}")
       return true if observation.errors.empty?
-
       error = InvalidParameterError.new('Could not create/update observation')
       error.model_errors = observation.errors
       raise error
     end
+
   end
 end

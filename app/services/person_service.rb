@@ -17,6 +17,7 @@ class PersonService
   PERSON_ATTRIBUTES_FIELDS = {
     hiv_status:'HIV status at entry',
     art_status:'ART status at registration',
+    reason_not_starting_art: 'Treatment Supporter',
     initiate_on_art:'Initiate on ART',
     tb_status:'TB History',
     sti_status:'STI History',
@@ -26,7 +27,7 @@ class PersonService
     entry_date: 'Entry Date',
     registration_type: 'Registration Type',
     prisoner_gender: 'Prisoner gender',
-    registrationdate: 'Registration date',
+    registrationdate: 'Registration date'
   }.freeze
 
   def create_person(params)

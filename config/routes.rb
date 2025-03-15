@@ -228,10 +228,7 @@ Rails.application.routes.draw do
       post '/dde/patients/merge', to: 'dde#merge_patients'
 
       get '/labels/location', to: 'locations#print_label'
-      get '/www', to: 'prison#ping_google'
-      get '/inmates', to: 'prison#population'
-      get '/scanchanges', to: 'prison#scan_changes'
-      post '/dbs_comparison', to: 'prison#compare_population'
+      
 
       # Search
       get '/search/given_name' => 'person_names#search_given_name'
@@ -330,7 +327,12 @@ Rails.application.routes.draw do
   get '/api/v1/vl_results', to: 'api/v1/reports#vl_results'
 
   #my added routes for prisonemr
+  get '/api/v1/www', to: 'api/v1/prison#ping_google'
+  get '/api/v1/inmates', to: 'prison#population'
+  get '/api/v1/scanchanges', to: 'prison#scan_changes'
+  post '/api/v1/dbs_comparison', to: 'prison#compare_population'
   get '/api/v1/locations' => 'locations#index'
-
-
+  get '/api/v1/prison_reports', to: 'api/v1/reports#prison_reports'
+  get '/api/v1/prisoners', to: 'api/v1/prison#facility_inmates'
+  
 end

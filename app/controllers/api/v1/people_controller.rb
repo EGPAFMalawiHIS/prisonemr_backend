@@ -37,7 +37,7 @@ module Api
         person_service.create_person_name(person, create_params)
         person_service.create_person_address(person, create_params)
         person_service.create_person_attributes(person, params.permit!)
-        prison_service.create_person_unique_identifier(person, params.permit!) # this is for adding person_id into mapping table
+        #prison_service.create_person_unique_identifier(person, params.permit!) # this is for adding person_id into mapping table
 
         render json: person, status: :created
       end
@@ -102,9 +102,9 @@ module Api
         PatientService.new
       end
 
-      def prison_service
-        PrisonService.new
-      end
+      #def prison_service
+        #PrisonService.new
+      #end
     end
   end
 end

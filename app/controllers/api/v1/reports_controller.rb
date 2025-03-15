@@ -194,6 +194,10 @@ module Api
         render json: service.vl_results(params[:start_date], params[:end_date])
       end
 
+      def prison_reports
+        render json: service.prison_reports(params[:start_date], params[:end_date], params[:report_name])
+      end
+
       private
 
       def service
