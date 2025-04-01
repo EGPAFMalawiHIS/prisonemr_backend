@@ -39,7 +39,6 @@ module Api
 
         return if status != 200
 
-=begin
         CSV.open("#{Rails.root}/public/next_appointment.csv", "wb") do |csv|
           csv << ["obs_id", "concept_id", "encounter_id", "value_datetime", "value_text"]
            Observation.joins("INNER JOIN encounter ON encounter.voided = 0 AND encounter.patient_id = obs.person_id")
@@ -63,14 +62,13 @@ module Api
                                        csv << [q[:obs_id],q[:concept_id],q[:encounter_id],q[:value_datetime],q[:value_text]]
                               end
         end
-=end
 
         CSV.foreach("./public/current_regimen.csv",headers:true) do |row|                   
                          
                   available = Observation.find_by_obs_id(row[0])                      
                  if available.present?
-                     #available.concept_id = 5096
-                     #available.save
+                     available.concept_id = 5096
+                     available.save
                 end
         end
 
@@ -83,13 +81,13 @@ module Api
                   if row[3] != nil
                     date = Date.parse(row[3])
                     if date.is_a?(Date)
-                       #available.concept_id = 5096
-                       #available.save
+                       available.concept_id = 5096
+                       available.save
                     end
                   
                   else
-                      #available.concept_id = 6882
-                      #available.save
+                      available.concept_id = 6882
+                      available.save
                   end
           end
        end
@@ -101,8 +99,8 @@ module Api
                        encounter: {  encounter_type: EncounterType.find_by_name('CERVICAL CANCER SCREENING'),
                       program_id: Program.find_by_name('ART PROGRAM').id
                       }).each do |q|
-                                   #q[:concept_id] = 9881;
-                                  # q.save
+                                  q[:concept_id] = 9881;
+                                  q.save
                        end
         
             Observation.joins("INNER JOIN encounter ON encounter.voided = 0 AND encounter.patient_id = obs.person_id")
@@ -111,8 +109,8 @@ module Api
                             encounter: {  encounter_type: EncounterType.find_by_name('HIV testing'),
                            program_id: Program.find_by_name('ART PROGRAM').id
                            }).each do |q|
-                                       # q[:concept_id] = 1786;
-                                       # q.save
+                                       q[:concept_id] = 1786;
+                                       q.save
                             end
 
        CSV.open("#{Rails.root}/public/databaseupdated.csv", "wb") do |csv|
