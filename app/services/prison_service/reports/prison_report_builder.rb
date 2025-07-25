@@ -65,7 +65,8 @@ module PrisonService
         ) AS patients
         INNER JOIN obs ON patients.patient_id = obs.person_id AND obs.voided = 0
         INNER JOIN person ON person.person_id = patients.patient_id
-        INNER JOIN encounter ON encounter.patient_id = patients.patient_id;
+        INNER JOIN encounter ON encounter.patient_id = patients.patient_id
+        WHERE encounter.encounter_datetime BETWEEN '#{@start_date}' AND '#{@end_date}';
         SQL
     
         results = ActiveRecord::Base.connection.execute(sql_query)

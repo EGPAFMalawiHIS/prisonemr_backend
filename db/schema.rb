@@ -377,7 +377,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.index ["word"], name: "word_in_concept_name"
   end
 
-  create_table "data_cleaning_supervisions", primary_key: "data_cleaning_tool_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "data_cleaning_supervisions", primary_key: "data_cleaning_tool_id", charset: "latin1", force: :cascade do |t|
     t.datetime "data_cleaning_datetime", precision: nil, null: false
     t.string "supervisors", null: false
     t.integer "creator", null: false
@@ -786,7 +786,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.index ["form_id"], name: "Form with which this htmlform is related"
   end
 
-  create_table "internal_sections", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "internal_sections", charset: "latin1", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator", null: false
     t.datetime "date_created", precision: nil, null: false
@@ -841,7 +841,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "lims_acknowledgement_statuses", primary_key: "order_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "lims_acknowledgement_statuses", primary_key: "order_id", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "test", null: false
     t.datetime "date_received", precision: nil, null: false
     t.datetime "date_pushed", precision: nil
@@ -994,7 +994,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.index ["token_registration_id"], name: "token_registration_tag"
   end
 
-  create_table "merge_audits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "merge_audits", charset: "latin1", force: :cascade do |t|
     t.integer "primary_id", null: false
     t.integer "secondary_id", null: false
     t.string "merge_type", null: false
@@ -1763,7 +1763,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.index ["stock_verification_id"], name: "index_pharmacy_obs_on_stock_verification_id"
   end
 
-  create_table "pharmacy_stock_balances", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "pharmacy_stock_balances", charset: "latin1", force: :cascade do |t|
     t.bigint "drug_id", null: false
     t.integer "pack_size", null: false
     t.float "open_balance", default: 0.0
@@ -1774,7 +1774,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.index ["drug_id"], name: "index_pharmacy_stock_balances_on_drug_id"
   end
 
-  create_table "pharmacy_stock_verifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "pharmacy_stock_verifications", charset: "latin1", force: :cascade do |t|
     t.string "reason"
     t.datetime "verification_date", precision: nil
     t.integer "creator"
@@ -1893,7 +1893,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.index ["uuid"], name: "program_workflow_state_uuid_index", unique: true
   end
 
-  create_table "radiology_accession_number_counters", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "radiology_accession_number_counters", charset: "latin1", force: :cascade do |t|
     t.date "date"
     t.bigint "value"
     t.datetime "created_at", precision: nil, null: false
