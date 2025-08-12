@@ -40,12 +40,16 @@ module PrisonService
                ).where.not(person: { birthdate: nil })
       end
 
+
       def his_patients_revs(indicators)
   # Cache frequently used lookups
   @died_concept_id ||= ConceptName.find_by_name('Died').concept_id
   @entry_date_type_id ||= PersonAttributeType.find_by_name('Entry Date').person_attribute_type_id
   @obs_columns ||= ActiveRecord::Base.connection.columns('obs').map(&:name)
-  
+  @location_id = GlobalProperty.joins("INNER JOIN location l ON l.name = global_property.property_value")
+                               .where(property: "current_health_center_name")
+                               .pluck("l.location_id")
+                               .first
   # Cache encounter type IDs with a single query
   @encounter_type_ids ||= EncounterType.where(
     name: ['HIV CLINIC REGISTRATION', 'HIV testing', 'TB REGISTRATION', 
@@ -69,6 +73,8 @@ module PrisonService
     INNER JOIN person ON person.person_id = p.patient_id AND p.voided = 0
     INNER JOIN person_attribute pa ON pa.person_id = p.patient_id 
       AND pa.person_attribute_type_id = #{@entry_date_type_id}
+    INNER JOIN patient_identifier i ON i.patient_id = p.patient_id 
+      AND i.location_id = #{@location_id}
     INNER JOIN encounter e  
       ON e.patient_id = p.patient_id
       AND e.encounter_datetime BETWEEN '#{@start_date}' AND '#{@end_date}'
