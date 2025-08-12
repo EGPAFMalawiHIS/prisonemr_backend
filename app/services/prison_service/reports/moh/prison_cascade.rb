@@ -37,9 +37,16 @@ module PrisonService
         CXCA_PROGRAM = 'Cervical cancer'
         CXCA_RESULTS = 'Outcome'
         CXCA_TREATMENT_STATUS = 'Currently in treatment'
+        CXCA_TREATMENT = 'Treatment'
         CXCA_TREATMENT_DATE = 'Date collected'
         CXCA_PROCEDURES = 'Procedure type'
+        CXCA_SCREEN_TYPE = 'Type'
         CXCA_TREATMENT_START_DATE = 'Start date'
+        CXCA_ORDERED_TESTS = 'Tests ordered'
+        CXCA_NO_SCREENING_REASON = 'Other reason for not seeking services'
+        CXCA_VIA_RESULTS = 'VIA Results'
+        CXCA_NEXT_APPOINTMENT_DATE = 'Appointment date'
+        CXCA_NO_TREATMENT_REASON = 'Reason treatment stopped comment'
         TB_TPT = 'Tuberculosis Preventive Treatment (TPT)'
         HEPATITIS_B_TESTED = 'Hepatitis test'
         HEPATITIS_B_RESULTS = 'Given lab results'
@@ -55,6 +62,7 @@ module PrisonService
         HIV_STATUS = 'HIV status'
         HTS_ACCESS_TYPE = 'HTS Access Type'
         LOCATION_WHERE_TEST_TOOK_PLACE = 'Location where test took place'
+        TESTING_DATE = 'Date of general test'
 
         INDICATORS = [
           { name: 'date_iniated_art', concept: DATE_INITIATED_ART, concept_id: ConceptName.find_by_name(DATE_INITIATED_ART).concept_id, value: 'value_datetime', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HIV CLINIC REGISTRATION').encounter_type_id },
@@ -72,8 +80,9 @@ module PrisonService
           { name: 'hepatitis_b_treatment', concept: HEPATITIS_B_TREATMENT_STARTED, concept_id: ConceptName.find_by_name(HEPATITIS_B_TREATMENT_STARTED).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HIV CLINIC REGISTRATION').encounter_type_id },
           { name: 'hepatitis_b_reffered_confirmation', concept: HEPATITIS_B_REFFERED_FOR_CONFIRMATION, concept_id: ConceptName.find_by_name(HEPATITIS_B_REFFERED_FOR_CONFIRMATION).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HIV CLINIC REGISTRATION').encounter_type_id },
           { name: 'eligible_for_hts_testing', concept: ELIGIBLE_FOR_TESTING, concept_id: ConceptName.find_by_name(ELIGIBLE_FOR_TESTING).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
-          { name: 'hts_test_accepted', concept: TEST_ACCEPTED, concept_id: ConceptName.find_by_name(TEST_ACCEPTED).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
           { name: 'hts_test_reason', concept: TEST_REASON, concept_id: ConceptName.find_by_name(TEST_REASON).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
+          { name: 'hts_test_accepted', concept: TEST_ACCEPTED, concept_id: ConceptName.find_by_name(TEST_ACCEPTED).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
+          { name: 'hts_testing_date', concept: TESTING_DATE, concept_id: ConceptName.find_by_name(TESTING_DATE).concept_id, value: 'value_datetime', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
           { name: 'hts_test_result', concept: TEST_RESULT, concept_id: ConceptName.find_by_name(TEST_RESULT).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
           { name: 'prisoner_test_offered', concept: TEST_OFFERED, concept_id: ConceptName.find_by_name(TEST_OFFERED).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
           { name: 'eligible_for_tb_screening', concept: TB_ENTRANTS, concept_id: ConceptName.find_by_name(TB_ENTRANTS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
@@ -83,19 +92,30 @@ module PrisonService
           { name: 'tb_lab_results', concept: TB_LAB_RESULTS, concept_id: ConceptName.find_by_name(TB_LAB_RESULTS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
           { name: 'tb_treatment_status', concept: TB_TREATMENT_STATUS, concept_id: ConceptName.find_by_name(TB_TREATMENT_STATUS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
           { name: 'tb_screaning_reason', concept: TB_SCREENING_REASON, concept_id: ConceptName.find_by_name(TB_SCREENING_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
+          { name: 'tb_preventive_therapy_date', concept: TB_TPT, concept_id: ConceptName.find_by_name(TB_TPT).concept_id, value: 'value_datetime', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
           { name: 'eligible_for_sti_screening', concept: STI_PROGRAM, concept_id: ConceptName.find_by_name(STI_PROGRAM).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_testing', concept: STI_TESTING_DONE, concept_id: ConceptName.find_by_name(STI_TESTING_DONE).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_test_results', concept: STI_TESTING_RESULT, concept_id: ConceptName.find_by_name(STI_TESTING_RESULT).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_symptoms', concept: STI_SYMPTOMS, concept_id: ConceptName.find_by_name(STI_SYMPTOMS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_treatment_status', concept: STI_TREATMENT_STATUS, concept_id: ConceptName.find_by_name(STI_TREATMENT_STATUS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_testing_reason', concept: TEST_REASON, concept_id: ConceptName.find_by_name(TEST_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
-          { name: 'inmates_eligible_cxca_screening', concept: CXCA_PROGRAM, concept_id: ConceptName.find_by_name(CXCA_PROGRAM).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
-          { name: 'inmates_cxa_procedure', concept: CXCA_PROCEDURES, concept_id: ConceptName.find_by_name(CXCA_PROGRAM).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id},
-          { name: 'inmates_screening_results', concept: CXCA_RESULTS, concept_id: ConceptName.find_by_name(CXCA_RESULTS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
-          { name: 'inmates_cxca_screened_date', concept: CXCA_TREATMENT_DATE, concept_id: ConceptName.find_by_name(CXCA_TREATMENT_DATE).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
-          { name: 'inmates_cxca_treatment_start_date', concept: CXCA_TREATMENT_START_DATE, concept_id: ConceptName.find_by_name(CXCA_TREATMENT_START_DATE).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
-          { name: 'tb_preventive_therapy_date', concept: TB_TPT, concept_id: ConceptName.find_by_name(TB_TPT).concept_id, value: 'value_datetime', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
-          #{ name: 'sti_treatment_status', concept: CXCA_TREATMENT_DATE, concept_id: ConceptName.find_by_name(CXCA_TREATMENT_DATE).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxca_eligible_screening', concept: CXCA_PROGRAM, concept_id: ConceptName.find_by_name(CXCA_PROGRAM).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxa_procedure', concept: CXCA_PROCEDURES, concept_id: ConceptName.find_by_name(CXCA_PROCEDURES).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id},
+          { name: 'cxca_screening_results', concept: CXCA_RESULTS, concept_id: ConceptName.find_by_name(CXCA_RESULTS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxca_screened_date', concept: CXCA_TREATMENT_DATE, concept_id: ConceptName.find_by_name(CXCA_TREATMENT_DATE).concept_id, value: 'value_datetime', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxca_treatment_start_date', concept: CXCA_TREATMENT_START_DATE, concept_id: ConceptName.find_by_name(CXCA_TREATMENT_START_DATE).concept_id, value: 'value_datetime', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxa_screen_type', concept: CXCA_SCREEN_TYPE, concept_id: ConceptName.find_by_name(CXCA_SCREEN_TYPE).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxa_ordered_tests', concept: CXCA_ORDERED_TESTS, concept_id: ConceptName.find_by_name(CXCA_ORDERED_TESTS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxa_no_screening_reason', concept: CXCA_NO_SCREENING_REASON, concept_id: ConceptName.find_by_name(CXCA_NO_SCREENING_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxa_via_results', concept: CXCA_VIA_RESULTS, concept_id: ConceptName.find_by_name(CXCA_VIA_RESULTS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxa_treatment_started', concept: CXCA_TREATMENT_STATUS, concept_id: ConceptName.find_by_name(CXCA_TREATMENT_STATUS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxa_treatment', concept: CXCA_TREATMENT, concept_id: ConceptName.find_by_name(CXCA_TREATMENT).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxca_next_appointment_date', concept: CXCA_NEXT_APPOINTMENT_DATE, concept_id: ConceptName.find_by_name(CXCA_NEXT_APPOINTMENT_DATE).concept_id, value: 'value_datetime', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+          { name: 'cxca_no_treatment_reason', concept: CXCA_NO_TREATMENT_REASON, concept_id: ConceptName.find_by_name(CXCA_NO_TREATMENT_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
+
+
+
+
           # {
           #   name: 'outcome',
           #   concept: 'Antiretroviral status or outcome',
@@ -138,8 +158,13 @@ module PrisonService
           @start_date = start_date&.to_date&.beginning_of_day
           @end_date = end_date&.to_date&.end_of_day
           @data = {
-            'prison_population' => [], 
+            'pp_opening_day_quarter' => [], 
+            'pp_new_entrants_firstmonth' => [], 
+            'pp_new_entrants_secondmonth' => [],
+            'pp_new_entrants_thirdmonth' => [],
             'number_of_hiv_new_entrants' => [],
+            'number_of_female_inmates' => [],
+            'number_of_inmates_screened_via' => [],
             'number_of_hiv_new_entrants_prev_hiv_positive' => [], 
             'number_of_hiv_new_entrants_prev_hiv_negative' => [],
             'number_of_hiv_new_entrants_eligible_for_testing' => [], 
@@ -184,7 +209,7 @@ module PrisonService
             'number_of_inmates_screened_cxca_pos' => [],
             'number_of_inmates_screened_cxca_neg' => [],
             'number_of_inmates_suspected_cxca' => [],
-            'number_of_inmates_cxca_treated_sameday' => [],
+            'number_of_inmates_via_cxca_treated' => [],
             'number_of_inmates_with_large_lesions' => [],
             'number_of_inmates_alive_onart' =>[],
             'number_of_inmates_new_ontpt' =>[],
@@ -254,6 +279,7 @@ module PrisonService
         private
    
         def init_report
+           @allprisoners = prison_population_entrants
            @query = his_patients_revs(INDICATORS)
            query_person_attributes(@query)
         end
@@ -311,7 +337,44 @@ module PrisonService
         end
 
         def fetch_prison_population
-          @data['prison_population'] = disaggregate_by_age_and_gender(@query)
+              quarter_start = @start_date.beginning_of_quarter
+              opening_population = @allprisoners.select do |person|
+                  next false unless person["prison_entry_date"].present?
+                  Date.parse(person["prison_entry_date"]) <= quarter_start rescue false
+              end
+            @data["pp_opening_day_quarter"] = disaggregate_by_age_and_gender(opening_population)
+
+            entrants = @allprisoners.select do |person|
+                  next false unless person["prison_entry_date"].present?
+                  d = Date.parse(person["prison_entry_date"]) rescue nil
+                  d && d >= quarter_start && d <= @end_date
+            end
+
+            first_month_range = quarter_start..quarter_start.end_of_month
+            second_month_range = quarter_start.next_month.beginning_of_month..quarter_start.next_month.end_of_month
+            third_month_range = quarter_start.next_month.next_month.beginning_of_month..quarter_start.next_month.next_month.end_of_month
+            
+            first_month = entrants.select do |p|
+                next false unless p["prison_entry_date"].present?
+                    d = Date.parse(p["prison_entry_date"]) rescue nil
+                    d && first_month_range.cover?(d)
+            end
+
+            second_month = entrants.select do |p|
+              next false unless p["prison_entry_date"].present?
+              d = Date.parse(p["prison_entry_date"]) rescue nil
+              d && second_month_range.cover?(d)
+            end
+
+            third_month = entrants.select do |p|
+               next false unless p["prison_entry_date"].present?
+               d = Date.parse(p["prison_entry_date"]) rescue nil
+               d && third_month_range.cover?(d)
+            end
+
+           @data["pp_new_entrants_firstmonth"] = disaggregate_by_age_and_gender(first_month)
+           @data["pp_new_entrants_secondmonth"] = disaggregate_by_age_and_gender(second_month)
+           @data["pp_new_entrants_thirdmonth"] = disaggregate_by_age_and_gender(third_month)
         end
         def track_hiv_screening_services
           @data['number_of_hiv_new_entrants'] = disaggregate_by_age_and_gender(filter_hash('prisoner_test_offered', 'Yes'))
@@ -320,7 +383,10 @@ module PrisonService
           @data['number_of_hiv_new_entrants_eligible_for_testing'] = disaggregate_by_age_and_gender(filter_hash('eligible_for_hts_testing', 'Yes'))
           @data['number_of_hiv_new_entrants_tested'] = disaggregate_by_age_and_gender(filter_hash('hts_test_accepted', 'Yes'))
           @data['number_of_hiv_new_entrants_tested_hiv_positive'] = disaggregate_by_age_and_gender(filter_hash('hts_test_result', 'NP'))
-          @data['number_of_hiv_new_entrants_linked_to_care'] = disaggregate_by_age_and_gender(filter_hash('prisoner_initiated_on_art', 'Yes'))
+          @data['number_of_hiv_new_entrants_linked_to_care'] = disaggregate_by_age_and_gender(
+               filter_hash('hts_test_result', 'NP').select do |q|
+                q['date_iniated_art'] != nil
+            end)
         end
 
         def track_tb_entrants_screened
@@ -393,16 +459,27 @@ module PrisonService
         end
 
         def track_cervical_screening_services
-           @data['number_of_tb_inmates_eligible_cxca'] = disaggregate_by_age_and_gender(filter_hash('inmates_eligible_cxca_screening', 'Yes'))
-           @data['number_of_inmates_screened_cxca_pos'] = disaggregate_by_age_and_gender(filter_hash('inmates_cxa_procedure', 'VIA').select do |q|
-               q['inmates_screening_results'] == 'Positive'
+           @data['number_of_female_inmates'] = disaggregate_by_age_and_gender(@allprisoners.select do |person|
+                person['gender'] == 'F'
+            end)
+           @data['number_of_tb_inmates_eligible_cxca'] = disaggregate_by_age_and_gender(filter_hash('cxca_eligible_screening', 'Yes'))
+           @data['number_of_inmates_screened_via'] = disaggregate_by_age_and_gender(filter_hash('cxa_procedure', 'VIA').select do |q|
+               q['gender'] == 'F'
           end)
-          @data['number_of_inmates_screened_cxca_neg'] = disaggregate_by_age_and_gender(filter_hash('inmates_cxa_procedure', 'VIA').select do |q|
-              q['inmates_screening_results'] == 'Negative'
+           @data['number_of_inmates_screened_cxca_pos'] = disaggregate_by_age_and_gender(filter_hash('cxa_procedure', 'VIA').select do |q|
+               q['cxca_screening_results'] == 'Positive' && q['gender'] == 'F'
           end)
-          @data['number_of_inmates_suspected_cxca'] = disaggregate_by_age_and_gender(filter_hash('inmates_screening_results', 'Suspected Cancer'))
-          @data['number_of_inmates_cxca_treated_sameday'] = disaggregate_by_age_and_gender(filter_hash('inmates_cxa_procedure', 'VIA').select do |q|
-              q['inmates_screening_results'] == 'Positive' && q['inmates_cxca_screened_date'] == q['inmates_cxca_treatment_start_date']
+          @data['number_of_inmates_screened_cxca_neg'] = disaggregate_by_age_and_gender(filter_hash('cxa_procedure', 'VIA').select do |q|
+              q['cxca_screening_results'] == 'Negative' && q['gender'] == 'F'
+          end)
+          @data['number_of_inmates_suspected_cxca'] = disaggregate_by_age_and_gender(filter_hash('cxca_screening_results', 'Suspected Cancer').select do |q|
+               q['gender'] == 'F'
+          end)
+          @data['number_of_inmates_via_cxca_treated'] = disaggregate_by_age_and_gender(filter_hash('cxa_procedure', 'VIA').select do |q|
+              q['gender'] == 'F' && q['cxca_treatment_start_date'] != nil
+          end)
+          @data['number_of_inmates_with_large_lesions'] = disaggregate_by_age_and_gender(filter_hash('cxa_via_results', 'Large lesion').select do |q|
+               q['gender'] == 'F'
           end)
         end
 
@@ -532,6 +609,23 @@ module PrisonService
                   }
                 end
           exited          
+        end
+
+        def prison_population_entrants
+             entry_date_type = PersonAttributeType.find_by_name('Entry Date')
+
+              Person.joins("INNER JOIN person_attribute pa ON pa.person_id = person.person_id
+                         AND pa.person_attribute_type_id = #{entry_date_type.id}")
+                 .where.not(birthdate: [nil])
+                 .pluck(:person_id, :gender, :birthdate, :value)
+                 .map do |person_id, gender, birthdate, value|
+                {
+                   "person_id" => person_id,
+                      "gender" => gender,
+                   "birthdate" => birthdate,
+                   "prison_entry_date" => value
+                 }
+              end
         end
 
         def captured_sti_symptoms

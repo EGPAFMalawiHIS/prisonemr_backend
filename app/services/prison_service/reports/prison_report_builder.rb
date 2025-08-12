@@ -41,85 +41,106 @@ module PrisonService
       end
 
       def his_patients_revs(indicators)
-        #AND person_attribute.value BETWEEN '#{@start_date}' AND '#{@end_date}'
-        died = ConceptName.find_by_name('Died').concept_id
-        columns = ActiveRecord::Base.connection.columns('obs').map(&:name)
-        sql_query = <<~SQL
-        SELECT patients.patient_id, person.gender, person.birthdate, encounter.encounter_datetime, encounter.encounter_type,
-               CONCAT_WS('/', #{columns.map { |col| "COALESCE(obs.#{col}, 'NULL')" }.join(', ')}) AS observations
-        FROM (
-            SELECT patient.patient_id
-            FROM patient
-            INNER JOIN person ON person.person_id = patient.patient_id AND patient.voided = 0 AND person.cause_of_death != #{died}
-            INNER JOIN person_attribute ON person_attribute.person_id = patient.patient_id AND  person_attribute.person_attribute_type_id = 41
-            INNER JOIN encounter ON encounter.patient_id = patient.patient_id
-            INNER JOIN program ON program.program_id = encounter.program_id
-            WHERE encounter.encounter_datetime BETWEEN '#{@start_date}' AND '#{@end_date}'
-            AND encounter.encounter_type IN (
-                SELECT encounter_type_id FROM encounter_type 
-                WHERE name IN ('HIV CLINIC REGISTRATION', 'HIV testing','TB REGISTRATION','CERVICAL CANCER SCREENING','HTS Visit','CHRONIC CONDITIONS')
-            )
-            AND program.program_id = (
-                SELECT program_id FROM program WHERE name = 'ART PROGRAM'
-            )
-        ) AS patients
-        INNER JOIN obs ON patients.patient_id = obs.person_id AND obs.voided = 0
-        INNER JOIN person ON person.person_id = patients.patient_id
-        INNER JOIN encounter ON encounter.patient_id = patients.patient_id
-        WHERE encounter.encounter_datetime BETWEEN '#{@start_date}' AND '#{@end_date}';
-        SQL
-    
-        results = ActiveRecord::Base.connection.execute(sql_query)
-        data = {}
+  # Cache frequently used lookups
+  @died_concept_id ||= ConceptName.find_by_name('Died').concept_id
+  @entry_date_type_id ||= PersonAttributeType.find_by_name('Entry Date').person_attribute_type_id
+  @obs_columns ||= ActiveRecord::Base.connection.columns('obs').map(&:name)
+  
+  # Cache encounter type IDs with a single query
+  @encounter_type_ids ||= EncounterType.where(
+    name: ['HIV CLINIC REGISTRATION', 'HIV testing', 'TB REGISTRATION', 
+           'CERVICAL CANCER SCREENING', 'HTS Visit', 'CHRONIC CONDITIONS']
+  ).pluck(:encounter_type_id)
+  
+  # Cache ART program ID
+  @art_program_id ||= Program.find_by_name('ART PROGRAM').program_id
+  
+  # Optimized single query with proper joins and indexing hints
+  sql_query = <<~SQL
+    SELECT 
+      p.patient_id,
+      person.gender,
+      person.birthdate,
+      e.encounter_datetime,
+      e.encounter_type,
+      #{@obs_columns.map { |col| "obs.#{col}" }.join(', ')}
+    FROM patient p
+    FORCE INDEX (PRIMARY)
+    INNER JOIN person ON person.person_id = p.patient_id AND p.voided = 0
+    INNER JOIN person_attribute pa ON pa.person_id = p.patient_id 
+      AND pa.person_attribute_type_id = #{@entry_date_type_id}
+    INNER JOIN encounter e  
+      ON e.patient_id = p.patient_id
+      AND e.encounter_datetime BETWEEN '#{@start_date}' AND '#{@end_date}'
+      AND e.encounter_type IN (#{@encounter_type_ids.join(',')})
+      AND e.program_id = #{@art_program_id}
+    INNER JOIN obs 
+      ON obs.person_id = p.patient_id 
+      AND obs.voided = 0
+      AND obs.obs_datetime BETWEEN '#{@start_date}' AND '#{@end_date}'
+    ORDER BY p.patient_id, e.encounter_datetime
+  SQL
 
-        results.each do |row|
-          patient_id = row[0]
-          observations = row[5].split('/')
-          patient_obs = {} 
-          patient_obs["encounter_type_id"] = row[4] 
-          columns.each_with_index do |value, index|
-            patient_obs[value] = observations[index] 
+      # find_each for memory efficiency with large result sets
+      data = {}
+  
+      # Execute query and process results in batches
+      ActiveRecord::Base.connection.execute(sql_query).each_slice(1000) do |batch|
+      batch.each do |row|
+              patient_id = row[0]
+      
+            # Build observation hash directly without string splitting
+            patient_obs = { "encounter_type_id" => row[4] }
+            @obs_columns.each_with_index do |col_name, idx|
+                    patient_obs[col_name] = row[5 + idx]
+            end
+      
+               # Use fetch with default block for better performance
+               patient_data = data.fetch(patient_id) do
+                data[patient_id] = {
+                                     'patientid' => patient_id,
+                                     'observations' => [],
+                                     'demographics' => {
+                                          'gender' => row[1],
+                                          'person_id' => patient_id,
+                                          'birthdate' => row[2],
+                                          'encounter_datetime' => row[3]
+                                    }
+                }
+              end
+      
+              patient_data['observations'] << patient_obs
+            end
           end
-          
-          patient_data = data[patient_id]
-          if patient_data.nil?
-            patient_data = { 'patientid' => patient_id, 'observations' => [],
-                             'demographics' => { 'gender' => row[1], 'person_id' => patient_id, 'birthdate' => row[2], 'encounter_datetime' => row[3] } }
-            data[patient_id] = patient_data
-          end
 
-          patient_data['observations'] << patient_obs
-        end
-
-        process_patient_data(data, indicators)
+          process_patient_data(data, indicators)
       end
 
       def process_patient_data(data, indicators)
+
         patient_data = []
-
         data.each_value do |patient_observation|
-
+    
           observations = patient_observation['observations']
           patient_obs = {}
+
           indicators.each do |indicator|
             if indicator[:concept_id].is_a?(Integer)
-              desired_observation = observations.find { |obs| obs['concept_id'] == indicator[:concept_id].to_s && obs['encounter_type_id'] == indicator[:encounter_type_id] }
+              desired_observation = observations.find { |obs| obs['concept_id'] == indicator[:concept_id].to_i && obs['encounter_type_id'] == indicator[:encounter_type_id] }
               if desired_observation.present?
-                val = indicator[:value]
+                 val = indicator[:value]
                 name = indicator[:name]
-                patient_obs[name] =
-                  (val == 'value_numeric' ? desired_observation[val].to_i : desired_observation[val])
+                patient_obs[name] = (val == 'value_numeric' ? desired_observation[val].to_i : desired_observation[val])
               else
                 patient_obs[name] = nil
               end
             elsif indicator[:concept_id].is_a?(Array)
               indicator[:concept_id].each_with_index do |concept_id, index|
-                desired_observation = observations.find { |obs| obs['concept_id'] == concept_id.to_s  && obs['encounter_type_id'] == indicator[:encounter_type_id] }
+                desired_observation = observations.find { |obs| obs['concept_id'] == concept_id.to_i  && obs['encounter_type_id'] == indicator[:encounter_type_id] }
                 if desired_observation.present?
                   val = indicator[:value]
                   name = indicator[:name][index]
-                  patient_obs[name] =
-                    (val == 'value_numeric' ? desired_observation[val].to_i : desired_observation[val])
+                  patient_obs[name] = (val == 'value_numeric' ? desired_observation[val].to_i : desired_observation[val])
                 else
                   name = indicator[:name][index]
                   patient_obs[name] = nil

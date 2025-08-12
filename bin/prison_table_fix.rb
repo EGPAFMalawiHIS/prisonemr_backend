@@ -171,4 +171,36 @@ puts "Updated #{hiv_testing_count} HIV testing observations"
 
 puts "Script completed successfully!"
 
+ # Update Zomba Prison to Zomba Central Prison Clinic
+        old_zomba_location = Location.find_by(name: "Zomba Prison")
+        new_zomba_location = Location.find_by(name: "Zomba Central Prison Clinic")
+
+      if old_zomba_location && new_zomba_location
+           PersonAttribute.where(value: "Zomba Prison").find_each do |site|
+                     site.update!(value: "Zomba Central Prison Clinic")
+        end
+
+        PatientIdentifier.where(location_id: old_zomba_location.location_id).find_each do |site|
+                     site.update!(location_id: new_zomba_location.location_id)
+        end
+      else
+         puts "One of the Zomba locations was not found."
+      end
+
+       # Update Chichiri Prison to Chichiri Prison Clinic
+       old_chichiri_location = Location.find_by(name: "Chichiri Prison")
+       new_chichiri_location = Location.find_by(name: "Chichiri Prison Clinic")
+
+      if old_chichiri_location && new_chichiri_location
+            PersonAttribute.where(value: "Chichiri Prison").find_each do |site|
+                      site.update!(value: "Chichiri Prison Clinic")
+             end
+
+          PatientIdentifier.where(location_id: old_chichiri_location.location_id).find_each do |site|
+                      site.update!(location_id: new_chichiri_location.location_id)
+          end
+      else
+          puts "One of the Chichiri locations was not found."
+      end
+
 
