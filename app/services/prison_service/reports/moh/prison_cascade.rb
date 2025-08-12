@@ -80,7 +80,7 @@ module PrisonService
           { name: 'hepatitis_b_treatment', concept: HEPATITIS_B_TREATMENT_STARTED, concept_id: ConceptName.find_by_name(HEPATITIS_B_TREATMENT_STARTED).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HIV CLINIC REGISTRATION').encounter_type_id },
           { name: 'hepatitis_b_reffered_confirmation', concept: HEPATITIS_B_REFFERED_FOR_CONFIRMATION, concept_id: ConceptName.find_by_name(HEPATITIS_B_REFFERED_FOR_CONFIRMATION).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HIV CLINIC REGISTRATION').encounter_type_id },
           { name: 'eligible_for_hts_testing', concept: ELIGIBLE_FOR_TESTING, concept_id: ConceptName.find_by_name(ELIGIBLE_FOR_TESTING).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
-          { name: 'hts_test_reason', concept: TEST_REASON, concept_id: ConceptName.find_by_name(TEST_REASON).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
+          { name: 'hts_screening_reason', concept: TEST_REASON, concept_id: ConceptName.find_by_name(TEST_REASON).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
           { name: 'hts_test_accepted', concept: TEST_ACCEPTED, concept_id: ConceptName.find_by_name(TEST_ACCEPTED).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
           { name: 'hts_testing_date', concept: TESTING_DATE, concept_id: ConceptName.find_by_name(TESTING_DATE).concept_id, value: 'value_datetime', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
           { name: 'hts_test_result', concept: TEST_RESULT, concept_id: ConceptName.find_by_name(TEST_RESULT).concept_id, value: 'value_text', join: 'LEFT', encounter_type_id: EncounterType.find_by_name('HTS Visit').encounter_type_id },
@@ -91,14 +91,14 @@ module PrisonService
           { name: 'tb_investigated', concept: TB_INVESTIGATION_TYPE, concept_id: ConceptName.find_by_name(TB_INVESTIGATION_TYPE).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
           { name: 'tb_lab_results', concept: TB_LAB_RESULTS, concept_id: ConceptName.find_by_name(TB_LAB_RESULTS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
           { name: 'tb_treatment_status', concept: TB_TREATMENT_STATUS, concept_id: ConceptName.find_by_name(TB_TREATMENT_STATUS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
-          { name: 'tb_screaning_reason', concept: TB_SCREENING_REASON, concept_id: ConceptName.find_by_name(TB_SCREENING_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
+          { name: 'tb_screening_reason', concept: TB_SCREENING_REASON, concept_id: ConceptName.find_by_name(TB_SCREENING_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
           { name: 'tb_preventive_therapy_date', concept: TB_TPT, concept_id: ConceptName.find_by_name(TB_TPT).concept_id, value: 'value_datetime', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('TB REGISTRATION').encounter_type_id },
           { name: 'eligible_for_sti_screening', concept: STI_PROGRAM, concept_id: ConceptName.find_by_name(STI_PROGRAM).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_testing', concept: STI_TESTING_DONE, concept_id: ConceptName.find_by_name(STI_TESTING_DONE).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_test_results', concept: STI_TESTING_RESULT, concept_id: ConceptName.find_by_name(STI_TESTING_RESULT).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_symptoms', concept: STI_SYMPTOMS, concept_id: ConceptName.find_by_name(STI_SYMPTOMS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'sti_treatment_status', concept: STI_TREATMENT_STATUS, concept_id: ConceptName.find_by_name(STI_TREATMENT_STATUS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
-          { name: 'sti_testing_reason', concept: TEST_REASON, concept_id: ConceptName.find_by_name(TEST_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
+          { name: 'sti_screening_reason', concept: TEST_REASON, concept_id: ConceptName.find_by_name(TEST_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('HIV Testing').encounter_type_id },
           { name: 'cxca_eligible_screening', concept: CXCA_PROGRAM, concept_id: ConceptName.find_by_name(CXCA_PROGRAM).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
           { name: 'cxa_procedure', concept: CXCA_PROCEDURES, concept_id: ConceptName.find_by_name(CXCA_PROCEDURES).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id},
           { name: 'cxca_screening_results', concept: CXCA_RESULTS, concept_id: ConceptName.find_by_name(CXCA_RESULTS).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
@@ -223,6 +223,7 @@ module PrisonService
             'number_of_sti_acute_scrotal_swelling' => [],
             'number_of_treated_sti' => [],
             'sti_inmates_tested_hiv_positive' =>[],
+            'new_entrants_sti_symptomatic_tested_hiv' => [],
             'inmates_tested_hb' =>[],
             'inmates_hb_negative' =>[],
             'inmates_hb_positive' =>[],
@@ -301,6 +302,7 @@ module PrisonService
           @query.select { |q| q[key]&.to_s&.strip&.downcase == value&.to_s&.strip&.downcase }
         end
 
+
         def get_diff(obs_time, time_since)
           (obs_time&.to_date&.- time_since&.to_date).to_i
         rescue StandardError
@@ -373,38 +375,67 @@ module PrisonService
            @data["pp_new_entrants_thirdmonth"] = disaggregate_by_age_and_gender(third_month)
         end
         def track_hiv_screening_services
-          @data['number_of_hiv_new_entrants'] = disaggregate_by_age_and_gender(filter_hash('prisoner_test_offered', 'Yes'))
-          @data['number_of_hiv_new_entrants_prev_hiv_positive'] = disaggregate_by_age_and_gender(filter_hash('hiv_status_at_entry', 'KP'))
-          @data['number_of_hiv_new_entrants_prev_hiv_negative'] = disaggregate_by_age_and_gender(filter_hash('hiv_status_at_entry', 'KN'))
-          @data['number_of_hiv_new_entrants_eligible_for_testing'] = disaggregate_by_age_and_gender(filter_hash('eligible_for_hts_testing', 'Yes'))
-          @data['number_of_hiv_new_entrants_tested'] = disaggregate_by_age_and_gender(filter_hash('hts_test_accepted', 'Yes'))
-          @data['number_of_hiv_new_entrants_tested_hiv_positive'] = disaggregate_by_age_and_gender(filter_hash('hts_test_result', 'NP'))
+          @data['number_of_hiv_new_entrants'] = disaggregate_by_age_and_gender(filter_hash('hts_screening_reason', 'Entry'))
+          @data['number_of_hiv_new_entrants_prev_hiv_positive'] = disaggregate_by_age_and_gender(
+              @query.select do |q| q['hiv_status_at_entry'] == 'KP' && q['hts_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_hiv_new_entrants_prev_hiv_negative'] = disaggregate_by_age_and_gender(
+            @query.select do |q| q['hiv_status_at_entry'] == 'KN' && q['hts_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_hiv_new_entrants_eligible_for_testing'] = disaggregate_by_age_and_gender(
+            @query.select do |q| q['eligible_for_hts_testing'] == 'Yes' && q['hts_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_hiv_new_entrants_tested'] = disaggregate_by_age_and_gender(
+             @query.select do |q| q['hts_test_accepted'] == 'Yes' && q['hts_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_hiv_new_entrants_tested_hiv_positive'] = disaggregate_by_age_and_gender(
+            @query.select do |q| q['hts_test_result'] == 'NP' && q['hts_screening_reason'] == 'Entry'
+          end)
           @data['number_of_hiv_new_entrants_linked_to_care'] = disaggregate_by_age_and_gender(
                filter_hash('hts_test_result', 'NP').select do |q|
-                q['date_iniated_art'] != nil
+                q['date_iniated_art'] != nil && q['hts_screening_reason'] == 'Entry'
             end)
         end
 
         def track_tb_entrants_screened
-          @data['number_of_tb_new_entrants'] = disaggregate_by_age_and_gender(filter_hash('tb_history', 'Yes'))
-          @data['number_of_new_entrants_screened_for_tb'] = disaggregate_by_age_and_gender(filter_hash('eligible_for_tb_screening', 'Yes'))
-          @data['number_of_new_entrants_presumptive_tb'] = disaggregate_by_age_and_gender(filter_hash('tb_screening_result', 'presumptive'))
-          @data['number_of_new_entrants_investigated_tb'] = disaggregate_by_age_and_gender(
-             @query.select do |q| q['tb_investigated'] != nil
+          @data['number_of_tb_new_entrants'] = disaggregate_by_age_and_gender(
+              @query.select do |q| q['tb_history'] == 'Yes' && q['tb_screening_reason'] == 'Entry'
           end)
-          @data['number_of_new_entrants_confirmed_tb'] = disaggregate_by_age_and_gender(filter_hash('tb_lab_results', 'pTB'))
-          @data['number_of_new_entrants_confirmed_tb_and_ontreatment'] = disaggregate_by_age_and_gender(filter_hash('tb_treatment_status', 'TB treatment initiated'))
+          @data['number_of_new_entrants_screened_for_tb'] = disaggregate_by_age_and_gender(
+             @query.select do |q| q['eligible_for_tb_screening'] == 'Yes' && q['tb_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_new_entrants_presumptive_tb'] = disaggregate_by_age_and_gender(
+               @query.select do |q| q['tb_screening_result'] == 'presumptive' && q['tb_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_new_entrants_investigated_tb'] = disaggregate_by_age_and_gender(
+             @query.select do |q| q['tb_investigated'] != nil && q['tb_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_new_entrants_confirmed_tb'] = disaggregate_by_age_and_gender(
+             @query.select do |q| q['tb_lab_results'] == 'pTB' && q['tb_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_new_entrants_confirmed_tb_and_ontreatment'] = disaggregate_by_age_and_gender(
+            @query.select do |q| q['tb_treatment_status'] == 'TB treatment initiated' && q['tb_screening_reason'] == 'Entry'
+          end)
         end
 
         def track_sti_entrants_screened
-          @data['number_of_sti_new_entrants'] = disaggregate_by_age_and_gender(filter_hash('sti_history', 'Yes'))
-          @data['number_of_new_entrants_screened_for_sti'] = disaggregate_by_age_and_gender(filter_hash('sti_testing', 'Yes'))
-          @data['number_of_new_entrants_symptomatic_sti'] = disaggregate_by_age_and_gender(filter_hash('sti_test_results', 'Positive'))
-          @data['number_of_new_entrants_sti_symptomatic_hiv_positive'] = disaggregate_by_age_and_gender(filter_hash('sti_test_results', 'Positive').select do |q|
-            q['hiv_status_at_entry'] == "Yes"
+          @data['number_of_sti_new_entrants'] = disaggregate_by_age_and_gender(
+            @query.select do |q| q['sti_history'] == 'Yes' && q['sti_screening_reason'] == 'Entry'
           end)
-          @data['number_of_new_entrants_sti_symptomatic_ontreatment'] = disaggregate_by_age_and_gender(filter_hash('sti_test_results', 'Positive').select do |q|
-            q['sti_treatment_status'] == "Yes" 
+          @data['number_of_new_entrants_screened_for_sti'] = disaggregate_by_age_and_gender(
+            @query.select do |q| q['sti_testing'] == 'Yes' && q['sti_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_new_entrants_symptomatic_sti'] = disaggregate_by_age_and_gender(
+             @query.select do |q| q['sti_symptoms'] != nil && q['sti_screening_reason'] == 'Entry'
+          end)
+          @data['new_entrants_sti_symptomatic_tested_hiv'] = disaggregate_by_age_and_gender(
+             @query.select do |q| q['sti_symptoms'] != nil && q['hts_test_accepted'] == "Yes" && q['sti_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_new_entrants_sti_symptomatic_hiv_positive'] = disaggregate_by_age_and_gender(
+             @query.select do |q| q['sti_symptoms'] != nil && q['hts_test_result'] == "NP" && q['sti_screening_reason'] == 'Entry'
+          end)
+          @data['number_of_new_entrants_sti_symptomatic_ontreatment'] = disaggregate_by_age_and_gender(
+             @query.select do |q| q['sti_symptoms'] != nil && q['sti_treatment_status'] == "Yes" && q['sti_screening_reason'] == 'Entry'
           end)
         end
 
@@ -559,34 +590,34 @@ module PrisonService
             @data['inmates_exiting_prison'] = disaggregate_by_age_and_gender(filter_hash('sti_testing_reason', 'Exit'))
             @data['exited_tested_hiv'] = disaggregate_by_age_and_gender(
                filter_hash('hts_test_accepted', 'Yes').select do |q|
-                q['hts_test_reason'] == 'Exit'
+                q['hts_screening_reason'] == 'Exit'
             end)
             @data['exited_test_hiv_pstv'] = disaggregate_by_age_and_gender(
                filter_hash('hts_test_accepted', 'Yes').select do |q|
-                q['hts_test_reason'] == 'Exit' && q['hts_test_result'] == 'NP'
+                q['hts_screening_reason'] == 'Exit' && q['hts_test_result'] == 'NP'
             end)
 
             @data['exited_linked_treatment'] = disaggregate_by_age_and_gender(
-               filter_hash('sti_testing_reason', 'Exit').select do |q|
+               filter_hash('sti_screening_reason', 'Exit').select do |q|
                 q['date_iniated_art'] != nil
             end)
-            @data['exited_test_tb'] = disaggregate_by_age_and_gender(filter_hash('tb_screaning_reason', 'Exit'))
-            @data['exited_diagnosed_tb'] = disaggregate_by_age_and_gender(filter_hash('tb_screaning_reason', 'Exit').select do |q|
+            @data['exited_test_tb'] = disaggregate_by_age_and_gender(filter_hash('tb_screening_reason', 'Exit'))
+            @data['exited_diagnosed_tb'] = disaggregate_by_age_and_gender(filter_hash('tb_screening_reason', 'Exit').select do |q|
               q['tb_lab_results'] == 'pTB'
             end)
 
-            @data['exited_test_hpb'] = disaggregate_by_age_and_gender(filter_hash('sti_testing_reason', 'Exit').select do |q|
+            @data['exited_test_hpb'] = disaggregate_by_age_and_gender(filter_hash('sti_screening_reason', 'Exit').select do |q|
               q['hepatitis_b_tested'] == 'Yes'
             end)
 
-            @data['exited_test_hpb_pstv'] = disaggregate_by_age_and_gender(filter_hash('sti_testing_reason', 'Exit').select do |q|
+            @data['exited_test_hpb_pstv'] = disaggregate_by_age_and_gender(filter_hash('sti_screening_reason', 'Exit').select do |q|
               q['hepatitis_b_results'] == 'Positive'
             end)
-            @data['exited_test_sti'] = disaggregate_by_age_and_gender(filter_hash('sti_testing_reason', 'Exit'))
-            @data['exited_test_sti_symptomatic'] = disaggregate_by_age_and_gender(filter_hash('sti_testing_reason', 'Exit').select do |q|
+            @data['exited_test_sti'] = disaggregate_by_age_and_gender(filter_hash('sti_screening_reason', 'Exit'))
+            @data['exited_test_sti_symptomatic'] = disaggregate_by_age_and_gender(filter_hash('sti_screening_reason', 'Exit').select do |q|
                   q['sti_symptoms'] != nil
             end)
-            @data['exited_test_sti_symptomatic_treatment'] = disaggregate_by_age_and_gender(filter_hash('sti_testing_reason', 'Exit').select do |q|
+            @data['exited_test_sti_symptomatic_treatment'] = disaggregate_by_age_and_gender(filter_hash('sti_screening_reason', 'Exit').select do |q|
               q['sti_treatment_status'] == 'Yes'
             end)
         end
