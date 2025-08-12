@@ -112,10 +112,6 @@ module PrisonService
           { name: 'cxa_treatment', concept: CXCA_TREATMENT, concept_id: ConceptName.find_by_name(CXCA_TREATMENT).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
           { name: 'cxca_next_appointment_date', concept: CXCA_NEXT_APPOINTMENT_DATE, concept_id: ConceptName.find_by_name(CXCA_NEXT_APPOINTMENT_DATE).concept_id, value: 'value_datetime', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
           { name: 'cxca_no_treatment_reason', concept: CXCA_NO_TREATMENT_REASON, concept_id: ConceptName.find_by_name(CXCA_NO_TREATMENT_REASON).concept_id, value: 'value_text', join: 'LEFT',encounter_type_id: EncounterType.find_by_name('CERVICAL CANCER SCREENING').encounter_type_id },
-
-
-
-
           # {
           #   name: 'outcome',
           #   concept: 'Antiretroviral status or outcome',
