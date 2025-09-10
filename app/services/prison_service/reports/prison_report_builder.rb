@@ -53,7 +53,7 @@ module PrisonService
   # Cache encounter type IDs with a single query
   @encounter_type_ids ||= EncounterType.where(
     name: ['HIV CLINIC REGISTRATION', 'HIV testing', 'TB REGISTRATION', 
-           'CERVICAL CANCER SCREENING', 'HTS Visit', 'CHRONIC CONDITIONS']
+           'CERVICAL CANCER SCREENING', 'HTS Visit', 'CHRONIC CONDITIONS','CHRONIC CARE VISIT']
   ).pluck(:encounter_type_id)
   
   # Cache ART program ID

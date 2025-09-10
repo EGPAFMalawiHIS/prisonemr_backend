@@ -54,6 +54,52 @@ else
   puts "[SKIP] Location 'Nkhatabay Prison Clinic' already exists"
 end
 
+# 3. Insert into location if it doesn't exist
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM location WHERE name = 'Ntchisi Prison Clinic';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting new location 'Ntchisi Prison Clinic'"
+  conn.execute(<<-SQL)
+    INSERT INTO location (name, description, city_village, country, creator, date_created, uuid)
+    VALUES (
+      'Ntchisi Prison Clinic',
+      'Health Centre',
+      'Ntchisi',
+      'Malawi',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] Location 'Ntchisi Prison Clinic' already exists"
+end
+
+# 3. Insert into location if it doesn't exist
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM location WHERE name = 'Rumphi Prison Clinic';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting new location 'Rumphi Prison Clinic'"
+  conn.execute(<<-SQL)
+    INSERT INTO location (name, description, city_village, country, creator, date_created, uuid)
+    VALUES (
+      'Rumphi Prison Clinic',
+      'Health Centre',
+      'Rumphi',
+      'Malawi',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] Location 'Rumphi Prison Clinic' already exists"
+end
+
 # Rails script to update observations without using CSV files
 # Place this in db/scripts/ or run via rails runner
 
@@ -202,5 +248,18 @@ puts "Script completed successfully!"
       else
           puts "One of the Chichiri locations was not found."
       end
+
+
+      PersonAttribute.where(value: 1,person_attribute_type_id: 42).find_each do |site|
+                     site.update!(value: "Remandee")
+      end
+      PersonAttribute.where(value: 2,person_attribute_type_id: 42).find_each do |site|
+                     site.update!(value: "Convict")
+      end
+      PersonAttribute.where(value: 3,person_attribute_type_id: 42).find_each do |site|
+                     site.update!(value: "Staff")
+      end
+
+      
 
 

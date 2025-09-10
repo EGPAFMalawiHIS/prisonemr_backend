@@ -885,7 +885,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.string "latitude", limit: 50
     t.string "longitude", limit: 50
     t.integer "creator", default: 0, null: false
-    t.datetime "date_created", precision: nil, null: false
+    t.datetime "date_created", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.string "county_district", limit: 50
     t.string "neighborhood_cell", limit: 50
     t.string "region", limit: 50
@@ -1109,12 +1109,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.integer "voided_by"
   end
 
-  create_table "moh_regimen_name", primary_key: "regimen_name_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-  end
-
   create_table "moh_regimen_names", primary_key: "regimen_name_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -1302,7 +1296,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
     t.integer "creator", default: 0, null: false
-    t.datetime "date_created", precision: nil, null: false
+    t.datetime "date_created", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.integer "retired", limit: 2, default: 0, null: false
     t.integer "retired_by"
     t.datetime "date_retired", precision: nil
