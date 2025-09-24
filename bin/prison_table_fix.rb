@@ -361,6 +361,27 @@ if existing.to_i == 0
 else
   puts "[SKIP] Current Place Of Residence at entry attribute already exists"
 end
+
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'Criminal Justice Number';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting Criminal Justice Number at entry attribute"
+  conn.execute(<<-SQL)
+    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
+    VALUES (
+      'Criminal Justice Number',
+      'Patient Criminal Justice Number into a facility at entry e.g prisons',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] Criminal Justice Number at entry attribute already exists"
+end
+
       
 
 
