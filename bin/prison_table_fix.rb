@@ -260,6 +260,107 @@ puts "Script completed successfully!"
                      site.update!(value: "Staff")
       end
 
+# 3. Insert into person_attributes if it doesn't exist
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'HIV status at entry';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting HIV status at entry attribute"
+  conn.execute(<<-SQL)
+    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
+    VALUES (
+      'HIV status at entry',
+      'Patient HIV status at entry into faciliye e.g prisons',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] HIV status at entry attribute already exists"
+end
+
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'Initiate on ART';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting HIV status at entry attribute"
+  conn.execute(<<-SQL)
+    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
+    VALUES (
+      'Initiate on ART',
+      'Patient ART status at entry into faciliye e.g prisons',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] Initiate on ART status at entry attribute already exists"
+end
+
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'TB History';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting TB History at entry attribute"
+  conn.execute(<<-SQL)
+    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
+    VALUES (
+      'TB History',
+      'Patient TB History at entry into faciliye e.g prisons',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] TB History status at entry attribute already exists"
+end
+
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'STI History';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting STI History at entry attribute"
+  conn.execute(<<-SQL)
+    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
+    VALUES (
+      'STI History',
+      'Patient STI History at entry into faciliye e.g prisons',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] STI History status at entry attribute already exists"
+end
+
+
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'Current Place Of Residence';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting Current Place Of Residence at entry attribute"
+  conn.execute(<<-SQL)
+    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
+    VALUES (
+      'Current Place Of Residence',
+      'Patient Current Place Of Residence into a facility at entry e.g prisons',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] Current Place Of Residence at entry attribute already exists"
+end
       
 
 
