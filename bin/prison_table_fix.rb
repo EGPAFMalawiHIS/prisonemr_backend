@@ -260,128 +260,80 @@ puts "Script completed successfully!"
                      site.update!(value: "Staff")
       end
 
-# 3. Insert into person_attributes if it doesn't exist
-existing = conn.select_value(<<-SQL)
-  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'HIV status at entry';
-SQL
-
-if existing.to_i == 0
-  puts "[INFO] Inserting HIV status at entry attribute"
-  conn.execute(<<-SQL)
-    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
-    VALUES (
-      'HIV status at entry',
-      'Patient HIV status at entry into faciliye e.g prisons',
-      1,
-      CURRENT_TIMESTAMP,
-      '#{SecureRandom.uuid}'
-    );
+def insert_person_attribute_type(conn, name, description)
+  existing = conn.select_value(<<-SQL)
+    SELECT COUNT(*) FROM person_attribute_type WHERE name = '#{name}';
   SQL
-else
-  puts "[SKIP] HIV status at entry attribute already exists"
+
+  if existing.to_i == 0
+    puts "[INFO] Inserting #{name} attribute"
+    conn.execute(<<-SQL)
+      INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
+      VALUES (
+        '#{name}',
+        '#{description}',
+        1,
+        CURRENT_TIMESTAMP,
+        '#{SecureRandom.uuid}'
+      );
+    SQL
+  else
+    puts "[SKIP] #{name} attribute already exists"
+  end
 end
 
-existing = conn.select_value(<<-SQL)
-  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'Initiate on ART';
-SQL
+# Usage - Insert all person attribute types
+attributes = [
+  {
+    name: 'HIV status at entry',
+    description: 'Patient HIV status at entry into facility e.g prisons'
+  },
+  {
+    name: 'Initiate on ART',
+    description: 'Patient ART status at entry into facility e.g prisons'
+  },
+  {
+    name: 'TB History',
+    description: 'Patient TB History at entry into facility e.g prisons'
+  },
+  {
+    name: 'STI History',
+    description: 'Patient STI History at entry into facility e.g prisons'
+  },
+  {
+    name: 'Current Place Of Residence',
+    description: 'Patient Current Place Of Residence into a facility at entry e.g prisons'
+  },
+  {
+    name: 'Criminal Justice Number',
+    description: 'Patient Criminal Justice Number into a facility at entry e.g prisons'
+  },
+  {
+    name: 'Entry Date',
+    description: 'Patient Date of Entry into a facility e.g prisons'
+  },
+  {
+    name: 'Registration Type',
+    description: 'Patient Registration Type into a facility e.g Convict'
+  },
+  {
+    name: 'Prisoner gender',
+    description: 'Patient Gender type identifier'
+  },
+  {
+    name: 'Cell Number',
+    description: 'Patient Cell Number in the prison facility'
+  },
+  {
+    name: 'Registration date',
+    description: 'Patient date of registration'
+  }
+]
 
-if existing.to_i == 0
-  puts "[INFO] Inserting HIV status at entry attribute"
-  conn.execute(<<-SQL)
-    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
-    VALUES (
-      'Initiate on ART',
-      'Patient ART status at entry into faciliye e.g prisons',
-      1,
-      CURRENT_TIMESTAMP,
-      '#{SecureRandom.uuid}'
-    );
-  SQL
-else
-  puts "[SKIP] Initiate on ART status at entry attribute already exists"
+# Insert all attributes
+attributes.each do |attr|
+  insert_person_attribute_type(conn, attr[:name], attr[:description])
 end
-
-existing = conn.select_value(<<-SQL)
-  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'TB History';
-SQL
-
-if existing.to_i == 0
-  puts "[INFO] Inserting TB History at entry attribute"
-  conn.execute(<<-SQL)
-    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
-    VALUES (
-      'TB History',
-      'Patient TB History at entry into faciliye e.g prisons',
-      1,
-      CURRENT_TIMESTAMP,
-      '#{SecureRandom.uuid}'
-    );
-  SQL
-else
-  puts "[SKIP] TB History status at entry attribute already exists"
-end
-
-existing = conn.select_value(<<-SQL)
-  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'STI History';
-SQL
-
-if existing.to_i == 0
-  puts "[INFO] Inserting STI History at entry attribute"
-  conn.execute(<<-SQL)
-    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
-    VALUES (
-      'STI History',
-      'Patient STI History at entry into faciliye e.g prisons',
-      1,
-      CURRENT_TIMESTAMP,
-      '#{SecureRandom.uuid}'
-    );
-  SQL
-else
-  puts "[SKIP] STI History status at entry attribute already exists"
-end
-
-
-existing = conn.select_value(<<-SQL)
-  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'Current Place Of Residence';
-SQL
-
-if existing.to_i == 0
-  puts "[INFO] Inserting Current Place Of Residence at entry attribute"
-  conn.execute(<<-SQL)
-    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
-    VALUES (
-      'Current Place Of Residence',
-      'Patient Current Place Of Residence into a facility at entry e.g prisons',
-      1,
-      CURRENT_TIMESTAMP,
-      '#{SecureRandom.uuid}'
-    );
-  SQL
-else
-  puts "[SKIP] Current Place Of Residence at entry attribute already exists"
-end
-
-existing = conn.select_value(<<-SQL)
-  SELECT COUNT(*) FROM person_attribute_type WHERE name = 'Criminal Justice Number';
-SQL
-
-if existing.to_i == 0
-  puts "[INFO] Inserting Criminal Justice Number at entry attribute"
-  conn.execute(<<-SQL)
-    INSERT INTO person_attribute_type (name, description, creator, date_created, uuid)
-    VALUES (
-      'Criminal Justice Number',
-      'Patient Criminal Justice Number into a facility at entry e.g prisons',
-      1,
-      CURRENT_TIMESTAMP,
-      '#{SecureRandom.uuid}'
-    );
-  SQL
-else
-  puts "[SKIP] Criminal Justice Number at entry attribute already exists"
-end
-
       
 
 
