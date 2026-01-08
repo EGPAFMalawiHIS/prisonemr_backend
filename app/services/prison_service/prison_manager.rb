@@ -57,7 +57,6 @@ module PrisonService
              group.max_by { |obj| richness_score(obj) }
           end
          
-
           unique_grouped_patients
       end
   
