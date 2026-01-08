@@ -19,6 +19,8 @@ module PrisonService
                           .joins("INNER JOIN person_name ON person_name.person_id = person.person_id")
                           .joins("INNER JOIN patient_identifier ON patient_identifier.patient_id = patient.patient_id")
                           .joins("INNER JOIN patient_program ON patient_program.patient_id = patient.patient_id")
+                          .joins("LEFT JOIN patient_state ON patient_state.patient_program_id = patient_program.patient_program_id")
+                          .where("patient_state.patient_program_id IS NULL")
                           .select(
                                    'patient.patient_id',
                                    'person_name.given_name',
@@ -29,7 +31,7 @@ module PrisonService
                                    'GROUP_CONCAT(person_attribute.person_attribute_type_id, ":", person_attribute.value) AS attributes'
                                 )
                             .where(patient_program: { program_id: Program.find_by_name('ART PROGRAM').id },patient:{voided:0})
-                            .where.not(person: { birthdate: nil, voided: 1})
+                            .where.not(person:{ birthdate: nil, voided: 1, dead: 1})
                             .group('patient.patient_id, person_name.given_name, person_name.family_name, 
                                     person.gender, person.birthdate, patient_identifier.identifier')
       grouped_patients = patients.map do |record|
