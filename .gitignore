@@ -41,3 +41,4 @@ Gemfile.lock
 
 # ignore all files in tmp
 /tmp/*
+vendor/*
