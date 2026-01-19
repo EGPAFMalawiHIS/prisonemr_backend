@@ -1,3 +1,4 @@
+#rails runner bin/prison_table_fix.rb
 # scripts/fix_tables.rb
 require 'securerandom'
 
