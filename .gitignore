@@ -43,3 +43,4 @@ Gemfile.lock
 /tmp/*
 vendor/*
 log/*
+vendor

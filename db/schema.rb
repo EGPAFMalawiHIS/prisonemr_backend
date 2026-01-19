@@ -818,9 +818,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.string "diff", limit: 2048
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["lims_id"], name: "index_lab_lims_failed_imports_on_lims_id"
-    t.index ["patient_nhid"], name: "index_lab_lims_failed_imports_on_patient_nhid"
-    t.index ["tracking_number"], name: "index_lab_lims_failed_imports_on_tracking_number"
+    t.index ["lims_id"], name: "index_lab_lims_failed_imports_on_lims_id", length: 191
+    t.index ["patient_nhid"], name: "index_lab_lims_failed_imports_on_patient_nhid", length: 191
+    t.index ["tracking_number"], name: "index_lab_lims_failed_imports_on_tracking_number", length: 191
   end
 
   create_table "lab_lims_order_mappings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -832,7 +832,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "revision", limit: 256
     t.boolean "result_push_status", default: false
-    t.index ["lims_id"], name: "index_lab_lims_order_mappings_on_lims_id"
+    t.index ["lims_id"], name: "index_lab_lims_order_mappings_on_lims_id", length: 191
     t.index ["order_id"], name: "fk_rails_0171384638"
   end
 
@@ -1107,12 +1107,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_09_064533) do
     t.integer "creator"
     t.boolean "voided", default: false, null: false
     t.integer "voided_by"
-  end
-
-  create_table "moh_regimen_name", primary_key: "regimen_name_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "moh_regimen_names", primary_key: "regimen_name_id", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
