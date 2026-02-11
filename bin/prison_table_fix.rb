@@ -335,6 +335,35 @@ attributes = [
 attributes.each do |attr|
   insert_person_attribute_type(conn, attr[:name], attr[:description])
 end
-      
 
+# Function to check and create Prison Number identifier type
+def ensure_prison_number_identifier_type(conn)
+  identifier_name = 'Prison Number'
+  identifier_description = 'Criminal Justice system Number'
+  
+  existing = conn.select_value(<<-SQL)
+    SELECT COUNT(*) FROM patient_identifier_type WHERE name = '#{identifier_name}';
+  SQL
 
+  if existing.to_i == 0
+    puts "[INFO] Creating '#{identifier_name}' patient identifier type"
+    conn.execute(<<-SQL)
+      INSERT INTO patient_identifier_type (name, description, creator, date_created, uuid)
+      VALUES (
+        '#{identifier_name}',
+        '#{identifier_description}',
+        1,
+        CURRENT_TIMESTAMP,
+        '#{SecureRandom.uuid}'
+      );
+    SQL
+    puts "[SUCCESS] '#{identifier_name}' patient identifier type created successfully"
+  else
+    puts "[SKIP] '#{identifier_name}' patient identifier type already exists"
+  end
+end
+
+# Execute the function
+ensure_prison_number_identifier_type(conn)
+
+puts "[INFO] All prison table fixes completed!"
