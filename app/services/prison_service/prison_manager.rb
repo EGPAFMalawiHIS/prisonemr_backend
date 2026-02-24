@@ -19,6 +19,8 @@ module PrisonService
                           .joins("INNER JOIN person_name ON person_name.person_id = person.person_id")
                           .joins("INNER JOIN patient_identifier ON patient_identifier.patient_id = patient.patient_id")
                           .joins("INNER JOIN patient_program ON patient_program.patient_id = patient.patient_id")
+                          .joins("INNER JOIN location ON patient_program.location_id = location.location_id")
+                          .joins("INNER JOIN global_property ON global_property.property = 'current_health_center_name' AND global_property.property_value = location.name")
                           .joins("LEFT JOIN patient_state ON patient_state.patient_program_id = patient_program.patient_program_id")
                           .where("patient_state.patient_program_id IS NULL")
                           .select(

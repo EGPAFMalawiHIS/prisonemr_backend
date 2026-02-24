@@ -363,7 +363,47 @@ def ensure_prison_number_identifier_type(conn)
   end
 end
 
+def ensure_update_maulaprison(conn)
+  location_name = 'Maula Prison Health Centre'
+        oldname = 'Maula Prison'
+        old_location = Location.find_by(name: oldname)
+        new_location = Location.find_by(name: location_name)
+
+  existingUsers = conn.select_value(<<-SQL)
+    SELECT COUNT(*) FROM patient_program WHERE location_id = '#{old_location.location_id}';
+  SQL
+
+  if existingUsers.to_i != 0
+    puts "[INFO] Updating Users locations '#{oldname}' to '#{location_name}'"
+    conn.execute(<<-SQL)
+      UPDATE global_property
+      SET property_value = '#{location_name}'
+      WHERE property = 'current_health_center_name';
+    SQL
+    puts "[SUCCESS] 'Current Health Center' locations updated successfully"
+
+    puts "[INFO] Updating patient_program locations '#{oldname}' to '#{location_name}'"
+    conn.execute(<<-SQL)
+      UPDATE patient_program
+      SET location_id = '#{new_location.location_id}'
+      WHERE location_id = '#{old_location.location_id}';
+    SQL
+    puts "[SUCCESS] patient_program locations updated successfully"
+
+    puts "[INFO] Updating person attribute '#{oldname}' to '#{location_name}'"
+    conn.execute(<<-SQL)
+      UPDATE person_attribute
+      SET value = '#{location_name}'
+      WHERE value = '#{oldname}' and person_attribute_type_id = (SELECT person_attribute_type_id FROM person_attribute_type WHERE name = 'Current Place Of Residence');
+    SQL
+    puts "[SUCCESS] person attribute locations updated successfully"
+  else
+    puts "[SKIP] 'Current Health Center' locations already up to date"
+  end
+end
+
 # Execute the function
 ensure_prison_number_identifier_type(conn)
+ensure_update_maulaprison(conn)
 
 puts "[INFO] All prison table fixes completed!"
