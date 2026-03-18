@@ -111,7 +111,7 @@ Observation.joins("INNER JOIN encounter ON encounter.voided = 0 AND encounter.pa
            .where(obs: { concept_id: 5096 },
                   encounter: { 
                     encounter_type: EncounterType.find_by_name('HIV CLINIC REGISTRATION'),
-                    program_id: Program.find_by_name('ART PROGRAM').id
+                    program_id: (prog = Program.find_by_name('ART PROGRAM')) && (prog.respond_to?(:program_id) ? prog.program_id : prog.id)
                   }).each do |obs|
   next_appointment_data << {
     obs_id: obs.obs_id,
@@ -131,7 +131,7 @@ Observation.joins("INNER JOIN encounter ON encounter.voided = 0 AND encounter.pa
            .where(obs: { concept_id: 6882 },
                   encounter: { 
                     encounter_type: EncounterType.find_by_name('HIV CLINIC REGISTRATION'),
-                    program_id: Program.find_by_name('ART PROGRAM').id
+                    program_id: (prog = Program.find_by_name('ART PROGRAM')) && (prog.respond_to?(:program_id) ? prog.program_id : prog.id)
                   }).each do |obs|
   current_regimen_data << {
     obs_id: obs.obs_id,
@@ -188,7 +188,7 @@ Observation.joins("INNER JOIN encounter ON encounter.voided = 0 AND encounter.pa
            .where(obs: { concept_id: 1786 },
                   encounter: { 
                     encounter_type: EncounterType.find_by_name('CERVICAL CANCER SCREENING'),
-                    program_id: Program.find_by_name('ART PROGRAM').id
+                    program_id: (prog = Program.find_by_name('ART PROGRAM')) && (prog.respond_to?(:program_id) ? prog.program_id : prog.id)
                   }).each do |obs|
   obs.concept_id = 9881
   obs.save
@@ -206,7 +206,7 @@ Observation.joins("INNER JOIN encounter ON encounter.voided = 0 AND encounter.pa
            .where(obs: { concept_id: 9881 },
                   encounter: { 
                     encounter_type: EncounterType.find_by_name('HIV testing'),
-                    program_id: Program.find_by_name('ART PROGRAM').id
+                    program_id: (prog = Program.find_by_name('ART PROGRAM')) && (prog.respond_to?(:program_id) ? prog.program_id : prog.id)
                   }).each do |obs|
   obs.concept_id = 1786
   obs.save
@@ -365,13 +365,24 @@ end
 
 def ensure_update_maulaprison(conn)
   location_name = 'Maula Prison Health Centre'
-        oldname = 'Maula Prison'
-        old_location = Location.find_by(name: oldname)
-        new_location = Location.find_by(name: location_name)
+  oldname = 'Maula Prison'
+  old_location = Location.find_by(name: oldname)
+  new_location = Location.find_by(name: location_name)
+
+  unless new_location
+    puts "[SKIP] New location '#{location_name}' not found, skipping update"
+    return
+  end
+
+  new_id = new_location.respond_to?(:location_id) ? new_location.location_id : new_location.id
+  old_id = old_location&.then { |l| l.respond_to?(:location_id) ? l.location_id : l.id }
+  old_id_condition = old_id.nil? ? "location_id IS NULL" : "location_id = '#{old_id}'"
 
   existingUsers = conn.select_value(<<-SQL)
-    SELECT COUNT(*) FROM patient_program WHERE location_id = '#{old_location.location_id}';
+    SELECT COUNT(*) FROM patient_program WHERE #{old_id_condition};
   SQL
+
+  puts "[INFO] Checking if '#{existingUsers.to_i}' records need updating in patient_program"
 
   if existingUsers.to_i != 0
     puts "[INFO] Updating Users locations '#{oldname}' to '#{location_name}'"
@@ -385,8 +396,8 @@ def ensure_update_maulaprison(conn)
     puts "[INFO] Updating patient_program locations '#{oldname}' to '#{location_name}'"
     conn.execute(<<-SQL)
       UPDATE patient_program
-      SET location_id = '#{new_location.location_id}'
-      WHERE location_id = '#{old_location.location_id}';
+      SET location_id = '#{new_id}'
+      WHERE #{old_id_condition};
     SQL
     puts "[SUCCESS] patient_program locations updated successfully"
 
