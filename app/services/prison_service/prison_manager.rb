@@ -13,7 +13,10 @@ module PrisonService
         @end_date = Time.now.end_of_day
   
         personal_attributes = load_personal_attributes
+        art_program = Program.unscoped.find_by_name('ART PROGRAM')
+        program_id = art_program&.respond_to?(:program_id) ? art_program.program_id : art_program&.id
 
+  
         # Query to fetch patients along with person attributes
         patients = Patient.joins(person: :person_attributes)
                           .joins("INNER JOIN person_name ON person_name.person_id = person.person_id")
@@ -32,17 +35,18 @@ module PrisonService
                                    'patient_identifier.identifier AS inmate_identifier',
                                    'GROUP_CONCAT(person_attribute.person_attribute_type_id, ":", person_attribute.value) AS attributes'
                                 )
-                            .where(patient_program: { program_id: Program.find_by_name('ART PROGRAM').id },patient:{voided:0})
-                            .where.not(person:{ birthdate: nil, voided: 1, dead: 1})
+                            .where(patient_program: { program_id: program_id }, patient: { voided: 0 })
+                            .where.not(person: { birthdate: nil, voided: 1, dead: 1 })
                             .group('patient.patient_id, person_name.given_name, person_name.family_name, 
                                     person.gender, person.birthdate, patient_identifier.identifier')
+
       grouped_patients = patients.map do |record|
             attributes = record[:attributes].split(',').each_with_object({}) do |attr, hash|
               type_id, value = attr.split(':')
               attribute = personal_attributes.find { |a| a[:person_attribute_type_id] == type_id.to_i }
               hash[attribute[:name]] = value if attribute
             end
-          
+            
             # Build patient data
             {
               id: record.patient_id,
@@ -77,10 +81,20 @@ module PrisonService
           { name: 'prisoner_criminal_number', person_attribute_type_id: find_attribute_id('Criminal Justice Number') },
           { name: 'prisoner_cell_number', person_attribute_type_id: find_attribute_id('Cell Number') }
         ]
+
       end
   
       def find_attribute_id(attribute_name)
-        PersonAttributeType.find_by_name(attribute_name)&.person_attribute_type_id
+        attr_type = PersonAttributeType.find_by_name(attribute_name)
+        attr_id = attr_type&.person_attribute_type_id
+        
+        if attr_id.nil?
+          puts "[DEBUG] ⚠️  Attribute '#{attribute_name}' NOT FOUND in person_attribute_type table"
+        else
+          puts "[DEBUG] ✓ Attribute '#{attribute_name}' found with ID: #{attr_id}"
+        end
+        
+        attr_id
       end
     end
   end

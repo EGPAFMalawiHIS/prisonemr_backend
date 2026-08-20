@@ -4,6 +4,21 @@ require 'securerandom'
 
 conn = ActiveRecord::Base.connection
 
+# 0. Ensure ART PROGRAM is not retired (MUST RUN FIRST)
+puts "\n=== Step 0: Un-retiring ART PROGRAM if needed ==="
+# Use unscoped to find even retired records
+art_program = Program.unscoped.find_by(name: 'ART PROGRAM')
+if art_program
+  if art_program.retired == 1
+    art_program.update(retired: 0)
+    puts "✓ ART PROGRAM un-retired successfully (was retired)"
+  else
+    puts "[SKIP] ART PROGRAM is already active (retired = 0)"
+  end
+else
+  puts "[ERROR] ART PROGRAM not found in database at all"
+end
+
 # 1. Check and alter 'location' table
 location_default = conn.select_value(<<-SQL)
   SELECT COLUMN_DEFAULT
@@ -99,6 +114,29 @@ if existing.to_i == 0
   SQL
 else
   puts "[SKIP] Location 'Rumphi Prison Clinic' already exists"
+end
+
+# 4. Insert into location if it doesn't exist
+existing = conn.select_value(<<-SQL)
+  SELECT COUNT(*) FROM location WHERE name = 'Ntchewu Prison Clinic';
+SQL
+
+if existing.to_i == 0
+  puts "[INFO] Inserting new location 'Ntchewu Prison Clinic'"
+  conn.execute(<<-SQL)
+    INSERT INTO location (name, description, city_village, country, creator, date_created, uuid)
+    VALUES (
+      'Ntchewu Prison Clinic',
+      'Health Centre',
+      'Ntchewu',
+      'Malawi',
+      1,
+      CURRENT_TIMESTAMP,
+      '#{SecureRandom.uuid}'
+    );
+  SQL
+else
+  puts "[SKIP] Location 'Ntchewu Prison Clinic' already exists"
 end
 
 # Rails script to update observations without using CSV files
@@ -376,13 +414,19 @@ def ensure_update_maulaprison(conn)
 
   new_id = new_location.respond_to?(:location_id) ? new_location.location_id : new_location.id
   old_id = old_location&.then { |l| l.respond_to?(:location_id) ? l.location_id : l.id }
-  old_id_condition = old_id.nil? ? "location_id IS NULL" : "location_id = '#{old_id}'"
+  
+  # Check for both NULL values AND old location ID
+  old_id_condition = if old_id.nil?
+    "location_id IS NULL"
+  else
+    "(location_id IS NULL OR location_id = '#{old_id}')"
+  end
 
   existingUsers = conn.select_value(<<-SQL)
     SELECT COUNT(*) FROM patient_program WHERE #{old_id_condition};
   SQL
 
-  puts "[INFO] Checking if '#{existingUsers.to_i}' records need updating in patient_program"
+  puts "[INFO] Checking if '#{existingUsers.to_i}' records need updating in patient_program (NULL or old location)"
 
   if existingUsers.to_i != 0
     puts "[INFO] Updating Users locations '#{oldname}' to '#{location_name}'"
@@ -413,8 +457,85 @@ def ensure_update_maulaprison(conn)
   end
 end
 
+def add_currenct_place_of_residence_attribute(conn)
+
+#check if a person attribute type with the name 'Current Place Of Residence' already exists
+
+  attribute_name = 'Current Place Of Residence'
+  existing = conn.select_value(<<-SQL)
+    SELECT COUNT(*) FROM person_attribute_type WHERE name = '#{attribute_name}';
+  SQL
+
+  
+  # Get the attribute type ID
+  attribute_type_id = conn.select_value(<<-SQL)
+    SELECT person_attribute_type_id FROM person_attribute_type WHERE name = '#{attribute_name}';
+  SQL
+  
+  puts "[INFO] Checking patients without '#{attribute_name}' attribute"
+  
+  # Count patients who don't have this attribute
+  patients_without_attr = conn.select_value(<<-SQL)
+    SELECT COUNT(DISTINCT patient.patient_id)
+    FROM patient
+    INNER JOIN patient_program ON patient_program.patient_id = patient.patient_id
+    INNER JOIN location ON patient_program.location_id = location.location_id
+    LEFT JOIN person_attribute ON person_attribute.person_id = patient.patient_id 
+      AND person_attribute.person_attribute_type_id = #{attribute_type_id}
+    WHERE patient.voided = 0
+      AND person_attribute.person_attribute_id IS NULL
+      AND patient_program.location_id IS NOT NULL;
+  SQL
+  
+  puts "[INFO] Found #{patients_without_attr} patients without '#{attribute_name}' attribute"
+  
+  if patients_without_attr.to_i > 0
+    puts "[INFO] Inserting '#{attribute_name}' attributes for patients"
+    conn.execute(<<-SQL)
+      INSERT INTO person_attribute (person_id, value, person_attribute_type_id, creator, date_created, uuid)
+      SELECT DISTINCT
+        patient.patient_id,
+        location.name,
+        #{attribute_type_id},
+        1,
+        CURRENT_TIMESTAMP,
+        UUID()
+      FROM patient
+      INNER JOIN patient_program ON patient_program.patient_id = patient.patient_id
+      INNER JOIN location ON patient_program.location_id = location.location_id
+      LEFT JOIN person_attribute ON person_attribute.person_id = patient.patient_id 
+        AND person_attribute.person_attribute_type_id = #{attribute_type_id}
+      WHERE patient.voided = 0
+        AND person_attribute.person_attribute_id IS NULL
+        AND patient_program.location_id IS NOT NULL;
+    SQL
+    puts "[SUCCESS] Inserted '#{attribute_name}' attributes for #{patients_without_attr} patients"
+  else
+    puts "[SKIP] All patients already have '#{attribute_name}' attribute"
+  end
+
+end
+
+def truncate_patients_tables(conn)
+  puts "[INFO] Truncating patients tables"
+  conn.execute("SET FOREIGN_KEY_CHECKS = 0;")
+  conn.execute("TRUNCATE TABLE obs;")
+  conn.execute("TRUNCATE TABLE encounter;")
+  conn.execute("TRUNCATE TABLE patient_identifier;")
+  conn.execute("TRUNCATE TABLE patient_program;")
+  conn.execute("TRUNCATE TABLE patient;")
+  conn.execute("TRUNCATE TABLE person_attribute;")
+  conn.execute("TRUNCATE TABLE person_address;")
+  conn.execute("TRUNCATE TABLE person_name;")
+  conn.execute("TRUNCATE TABLE person;")
+  conn.execute("SET FOREIGN_KEY_CHECKS = 1;")
+  puts "[SUCCESS] Truncated patients tables"
+end
+
 # Execute the function
 ensure_prison_number_identifier_type(conn)
 ensure_update_maulaprison(conn)
+add_currenct_place_of_residence_attribute(conn)
+#truncate_patients_tables(conn)
 
 puts "[INFO] All prison table fixes completed!"
