@@ -515,7 +515,7 @@ def add_currenct_place_of_residence_attribute(conn)
 end
 
 def truncate_patients_tables(conn)
-  puts "[INFO] Truncating patients tables"
+  puts "[INFO] Truncating patients tables (preserving person records associated with users)"
   conn.execute("SET FOREIGN_KEY_CHECKS = 0;")
   conn.execute("TRUNCATE TABLE obs;")
   conn.execute("TRUNCATE TABLE encounter;")
@@ -525,9 +525,10 @@ def truncate_patients_tables(conn)
   conn.execute("TRUNCATE TABLE person_attribute;")
   conn.execute("TRUNCATE TABLE person_address;")
   conn.execute("TRUNCATE TABLE person_name;")
-  conn.execute("TRUNCATE TABLE person;")
+  # Only delete person records that are NOT associated with users
+  conn.execute("DELETE FROM person WHERE person_id NOT IN (SELECT user_id FROM users WHERE user_id IS NOT NULL);")
   conn.execute("SET FOREIGN_KEY_CHECKS = 1;")
-  puts "[SUCCESS] Truncated patients tables"
+  puts "[SUCCESS] Truncated patients tables (preserved #{conn.select_value('SELECT COUNT(*) FROM person')} person records associated with users)"
 end
 
 # Execute the function
