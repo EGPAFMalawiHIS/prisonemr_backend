@@ -115,20 +115,19 @@ if existing.to_i == 0
 else
   puts "[SKIP] Location 'Rumphi Prison Clinic' already exists"
 end
-
 # 4. Insert into location if it doesn't exist
 existing = conn.select_value(<<-SQL)
-  SELECT COUNT(*) FROM location WHERE name = 'Ntchewu Prison Clinic';
+  SELECT COUNT(*) FROM location WHERE name = 'Ntcheu Prison Clinic';
 SQL
 
 if existing.to_i == 0
-  puts "[INFO] Inserting new location 'Ntchewu Prison Clinic'"
+  puts "[INFO] Inserting new location 'Ntcheu Prison Clinic'"
   conn.execute(<<-SQL)
     INSERT INTO location (name, description, city_village, country, creator, date_created, uuid)
     VALUES (
-      'Ntchewu Prison Clinic',
+      'Ntcheu Prison Clinic',
       'Health Centre',
-      'Ntchewu',
+      'Ntcheu',
       'Malawi',
       1,
       CURRENT_TIMESTAMP,
@@ -136,9 +135,8 @@ if existing.to_i == 0
     );
   SQL
 else
-  puts "[SKIP] Location 'Ntchewu Prison Clinic' already exists"
+  puts "[SKIP] Location 'Ntcheu Prison Clinic' already exists"
 end
-
 # Rails script to update observations without using CSV files
 # Place this in db/scripts/ or run via rails runner
 
@@ -288,7 +286,7 @@ puts "Script completed successfully!"
           puts "One of the Chichiri locations was not found."
       end
 
-
+      
       PersonAttribute.where(value: 1,person_attribute_type_id: 42).find_each do |site|
                      site.update!(value: "Remandee")
       end
@@ -536,6 +534,6 @@ end
 ensure_prison_number_identifier_type(conn)
 ensure_update_maulaprison(conn)
 add_currenct_place_of_residence_attribute(conn)
-#truncate_patients_tables(conn)
+truncate_patients_tables(conn)
 
 puts "[INFO] All prison table fixes completed!"
